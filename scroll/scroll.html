@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <title>新闻类焦点图</title>
+        <meta charset="utf-8">
+        <link href="../static/css/common.css" type="text/css" rel="stylesheet"/>
+        <script src="../static/js/jquery-1.11.0.min.js" type="text/javascript"></script>
+        <script src="myscroll.js" type="text/javascript"></script>
+        <style type="text/css">
+            #myscroll{
+                position:relative;
+                width:1000px;
+                height:80px;
+                overflow:hidden;
+                margin:40px auto;
+            }
+        </style>
+    </head>
+    <body>
+         <div id="myscroll">
+                <ul>
+                    <li>
+                        <a href="#" target="_blank"><img src="../static/images/f1.jpg" width="120" height="80"/></a>
+
+                    </li>
+                    <li>
+                        <a href="#" target="_blank"><img src="../static/images/f2.jpg" width="120" height="80"/></a>
+
+                    </li>
+                    <li>
+                        <a href="#" target="_blank"><img src="../static/images/f3.jpg" width="120" height="80"/></a>
+
+                    </li>
+                    <li>
+                        <a href="#" target="_blank"><img src="../static/images/f4.jpg" width="120" height="80"/></a>
+
+                    </li>
+                    <li>
+                        <a href="#" target="_blank"><img src="../static/images/f4.jpg" width="120" height="80"/></a>
+
+                    </li>
+                    <li>
+                        <a href="#" target="_blank"><img src="../static/images/f4.jpg" width="120" height="80"/></a>
+
+                    </li>
+                    <li>
+                        <a href="#" target="_blank"><img src="../static/images/f4.jpg" width="120" height="80"/></a>
+                    </li>
+                </ul>
+          </div>
+           <script>
+                 $("#myscroll").myscroll({
+                    speed: 40,
+                    step: 1,
+                    dir: "left"
+                });
+        </script>
+    </body>
+</html>

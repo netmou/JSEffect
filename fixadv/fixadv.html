@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <title>新闻类焦点图</title>
+        <meta charset="utf-8">
+        <link href="../static/css/common.css" type="text/css" rel="stylesheet"/>
+        <script src="../static/js/jquery-1.11.0.min.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <div id="piclft" style="height:373px;width:154px;z-index: 1000;position:absolute;" >
+            <div onclick="document.getElementById('piclft').style.display='none';">
+                <img src="close.gif">
+            </div>
+            <img src="p2.jpg">
+        </div>
+        <div id="picrgt" style="height:373px;width:154px;z-index: 1000;position:absolute;" >
+            <div onclick="document.getElementById('picrgt').style.display='none';">
+                <img src="close.gif">
+            </div>
+             <img src="p1.jpg">
+        </div>
+        <script type="text/javascript">
+            $(function(){
+                var fixfunc = function () {
+                    //var offset=$("content").width()/2...实际上left和rigt的值都应扣除该值
+                    //即偏移距离=窗口的一半 减去 内容主题的一半 减去 广告图片的自身宽度
+                    var offsetTop =$(window).scrollTop() + 100 + "px";
+                    $("#piclft").stop().animate({
+                        top: offsetTop,
+                        "left": $(window).width() / 2  -  $("#piclft").width()
+                    }, {
+                        duration: 100,
+                        queue: false
+                    });
+                    $("#picrgt").stop().animate({
+
+                        top: offsetTop,
+                        "right": $(window).width() / 2 -  $("#picrgt").width()
+                    }, {
+                        duration: 100,
+                        queue: false
+                    });
+                };
+                fixfunc();
+                $(window).scroll(fixfunc).resize(fixfunc);
+            });
+
+        </script>
+    </body>
+</html>

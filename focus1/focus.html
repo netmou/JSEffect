@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <title>新闻类焦点图</title>
+        <meta charset="utf-8">
+        <link href="../static/css/common.css" type="text/css" rel="stylesheet"/>
+        <script src="../static/js/jquery-1.11.0.min.js" type="text/javascript"></script>
+        <script src="myfocus.js" type="text/javascript"></script>
+        <style type="text/css">
+            #myfocus{
+                position:relative;
+                width:1000px;
+                height:280px;
+                overflow:hidden;
+                margin:40px auto;
+            }
+            .btnWrap{
+                position:absolute;
+                width:1000px;
+                height:20px;
+                text-align:center;
+                font-size:14px;
+                bottom:24px;
+                left:0px;
+            }
+            .btnWrap .btn{
+                border-left:1px solid #fff;
+                background:#000;
+                line-height:20px;
+                font-size:14px;
+                float:right;
+                color:#fff;
+                height:20px;
+                width:20px;
+                padding:0px;
+            }
+            .picshow{
+                position:relative;
+            }
+            .picshow li{
+                position:relative;
+                width:1000px;
+                height:280px;
+                float:left;
+            }
+            .title{
+                position:absolute;
+                background:rgba(60,60,60,0.3);
+                text-align:center;
+                width:1000px;
+                height:24px;
+                left:0px;
+                bottom:0px;
+            }
+        </style>
+    </head>
+    <body>
+         <div id="myfocus">
+                <ul class="picshow">
+                    <li>
+                        <a href="#" target="_blank"><img src="../static/images/f1.jpg" width="1000" height="280"/></a>
+                        <div class='title'>this is a test</div>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank"><img src="../static/images/f1.jpg" width="1000" height="280"/></a>
+                        <div class='title'>this is a test</div>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank"><img src="../static/images/f1.jpg" width="1000" height="280"/></a>
+                        <div class='title'>this is a test</div>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank"><img src="../static/images/f1.jpg" width="1000" height="280"/></a>
+                        <div class='title'>this is a test</div>
+                    </li>
+                </ul>
+                <div class='btnWrap'>
+                    <span class="btn">4</span>
+                    <span class="btn">3</span>
+                    <span class="btn">2</span>
+                    <span class="btn">1</span>
+                </div>
+          </div>
+    </body>
+</html>
