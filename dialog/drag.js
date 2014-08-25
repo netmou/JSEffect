@@ -4,7 +4,7 @@
  **************************************************/
 
 (function($){
-    $.fn.drag=function(){
+    $.fn.drag=function(aim){
         return $(this).each(function(){
             var drag=this;
             var startX=0;
@@ -15,20 +15,20 @@
                 display:"block"
             });
             $(document).on( "mousemove", function(event) {
-                if(ondrag){
+                if(ondrag  && 1  == event.which){
                     $(drag).offset({
                         left:event.pageX - startX,
                         top:event.pageY - startY
                     });
                 }
             });
-            $(drag).on( "mouseup", function(event) {
+            $(document).on( "mouseup", function(event) {
                 ondrag = false;
-                $(drag).css("cursor","auto");
+                $(aim || drag).css("cursor","auto");
             });
-            $(drag).on( "mousedown", function(event) {
+            $(aim || drag).on( "mousedown", function(event) {
                 ondrag = true;
-                $(drag).css("cursor","move");
+                $(aim || drag).css("cursor","move");
                 var offset = $(drag).offset();
                 startX = event.pageX - offset.left;
                 startY = event.pageY - offset.top;
