@@ -1,10 +1,10 @@
 <?php
-class CommonFunc{
+class Utility{
 
     /**
     * 返回地球上两个经纬坐标之间的的距离，算法基于椭圆，返回值单位：米（M）
     */
-    function getFlatternDistance($lat1,$lng1,$lat2,$lng2){
+    public function getFlatternDistance($lat1,$lng1,$lat2,$lng2){
         if($lat1==$lat2 && $lng1==$lng2){
             return 0;
         }
@@ -38,7 +38,7 @@ class CommonFunc{
     /**
     * 判断点是否在多边形内,算法基于多边形外的点与多边形相交，有偶数个交点
     */
-    function pointInPolygon($p, $points){
+    public function pointInPolygon($p, $points){
         $cross = 0;
         $size=count($points);
         for($i = 0; $i < $size; $i++){
@@ -65,7 +65,7 @@ class CommonFunc{
     * 去除XSS（跨站脚本攻击）的函数
     * CR(0a) and LF(0b) and TAB(9) are allowed
     **/
-    function removeXSS($val) {
+    public function removeXSS($val) {
        $val = preg_replace('/([\x00-\x08\x0b-\x0c\x0e-\x19])/', '', $val);
 
        $search = 'abcdefghijklmnopqrstuvwxyz';
@@ -73,8 +73,8 @@ class CommonFunc{
        $search .= '1234567890!@#$%^&*()';
        $search .= '~`";:?+/={}[]-_|\'\\';
        for ($i = 0; $i < strlen($search); $i++) {
-          $val = preg_replace('/(&#[xX]0{0,8}'.dechex(ord($search[$i])).';?)/i', $search[$i], $val); // with a ;
-          $val = preg_replace('/(&#0{0,8}'.ord($search[$i]).';?)/', $search[$i], $val); // with a ;
+          $val = preg_replace('/(&#[xX]0{0,8}'.dechex(ord($search[$i])).';?)/i', $search[$i], $val);
+          $val = preg_replace('/(&#0{0,8}'.ord($search[$i]).';?)/', $search[$i], $val);
        }
 
        $ra1 = Array('javascript', 'vbscript', 'expression', 'applet', 'meta', 'xml', 'blink', 'link', 'style', 'script', 'embed', 'object', 'iframe', 'frame', 'frameset', 'ilayer', 'layer', 'bgsound', 'title', 'base');
@@ -109,7 +109,7 @@ class CommonFunc{
     /**
     * 将一个url的quergString部分解析为键值对数组
     */
-    function parseQuery($url){
+    public function parseQuery($url){
         $info=parse_url($url);
         $tmp=array();
         parse_str($info['query'],$tmp);
@@ -119,7 +119,7 @@ class CommonFunc{
     /**
     * 给出js-alert提示并跳转页面
     */
-    function alert($msg,$addr=null){
+    public function alert($msg,$addr=null){
         echo "<script>\n";
         echo "alert('{$msg}');\n";
         if($addr!=""){
@@ -135,7 +135,7 @@ class CommonFunc{
     * 将PHP变量的值嵌入在js代码中，使其成为合法的js常量
     * 本函数针对外部的输入，不适用于内部输入
     */
-    function toJsVar($val,$slash=false){
+    public function toJsVar($val,$slash=false){
         if(is_scalar($val)){
             if(is_numeric($val)){
                 return $val;
@@ -156,7 +156,7 @@ class CommonFunc{
     /**
     * 针对外部输入，将变量中特殊字符转义
     */
-    function addSlash($str){
+    public function addSlash($str){
         if(get_magic_quotes_gpc()){
             return $str;
         }
@@ -166,7 +166,7 @@ class CommonFunc{
     /**
     * 针对外部输入，将变量中经过转义的特殊字符反转义
     */
-    function stripSlash($str){
+    public function stripSlash($str){
         if(get_magic_quotes_gpc()){
             return stripslashes($str);
         }
@@ -176,7 +176,7 @@ class CommonFunc{
     /**
     * 在utf-8的字符编码的字符串中截取部分
     */
-    function subUtf8($str,$len,$pad=null){
+    public function subUtf8($str,$len,$pad=null){
         $offset = 0;
         $chars = 0;
         $rst = null;
@@ -193,6 +193,32 @@ class CommonFunc{
             }
         }
         return $rst.$pad;
+    }
+
+    public function getRealIPAddress() {
+        if ($IP=$_SERVER['HTTP_CLIENT_IP']) {
+            return $IP;
+        }else if ($IP=$_SERVER['HTTP_X_FORWARDED_FOR']) {
+            return $IP;
+        }else if($IP=$_SERVER['REMOTE_ADDR']) {
+            return $IP;
+        }
+        return '0.0.0.0';
+    }
+    //加密字符串
+    function encrypt($encrypt,$key="~QaZ`!1X2s3C4W5V6d7B8@9N0f-M=E,g") {
+        $iv = mcrypt_create_iv ( mcrypt_get_iv_size ( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB ), MCRYPT_RAND );
+        $passcrypt = mcrypt_encrypt ( MCRYPT_RIJNDAEL_256, $key, $encrypt, MCRYPT_MODE_ECB, $iv );
+        $encode = base64_encode ( $passcrypt );
+        return $encode;
+    }
+
+    //解密字符串
+    function decrypt($decrypt,$key="~QaZ`!1X2s3C4W5V6d7B8@9N0f-M=E,g") {
+        $decoded = base64_decode ( $decrypt );
+        $iv = mcrypt_create_iv ( mcrypt_get_iv_size ( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB ), MCRYPT_RAND );
+        $decrypted = mcrypt_decrypt ( MCRYPT_RIJNDAEL_256, $key, $decoded, MCRYPT_MODE_ECB, $iv );
+        return $decrypted;
     }
 }
 

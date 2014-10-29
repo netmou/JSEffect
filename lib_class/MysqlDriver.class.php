@@ -225,7 +225,7 @@ class mysql {
                 }
                 $sql = $sql . ' and `' . $key . '`=' . $val;
             }
-        } else {
+        } else if($condition) {
             $condition = $slash ? addslashes($condition) : $condition;
             $sql = $sql . ' ' . $condition;
         }
@@ -233,7 +233,7 @@ class mysql {
     }
 
     /**
-     * 根据条件查询数据，返回指定的结果
+     * 根据条件模糊查询数据，返回指定的结果
      * @param string $table 数据表名
      * @param array $fields 返回的字段
      * @param array $likes 模糊匹配的字段
@@ -243,8 +243,20 @@ class mysql {
      * @return array
      */
     function likeAll($table, $fields, $likes, $keyword, $condition = null, $slash = false) {
+        $keyword=$slash ? addslashes($keyword) : $keyword;
         $like = ' and concat_ws(\'-|-\',' . implode(',', $likes) . ') like ' . "'%{$keyword}%' ";
-        $this->fetch($table, $fields, $like . $condition, $slash);
+        if (is_array($condition)) {
+            foreach ($condition as $key => $val) {
+                if ($val !== null && is_scalar($val)) {
+                    $val = $slash ? '"' . addslashes($val) . '"' : '"' . $val . '"';
+                }
+                $like = $like . ' and `' . $key . '`=' . $val;
+            }
+        } else if($condition) {
+            $condition = $slash ? addslashes($condition) : $condition;
+            $like = $like . ' ' . $condition;
+        }
+        $this->fetch($table, $fields, $like, $slash);
     }
 
     /**
@@ -272,7 +284,7 @@ class mysql {
                 }
                 $sql = $sql . ' and `' . $key . '`=' . $val;
             }
-        } else {
+        } else if($condition) {
             $condition = $slash ? addslashes($condition) : $condition;
             $sql = $sql . ' ' . $condition;
         }
@@ -298,7 +310,7 @@ class mysql {
                 }
                 $sql = $sql . ' and `' . $key . '`=' . $val;
             }
-        } else {
+        } else if($condition) {
             $condition = $slash ? addslashes($condition) : $condition;
             $sql = $sql . ' ' . $condition;
         }

@@ -15,16 +15,7 @@ class Tree {
 
     /**
      * 构造函数，初始化类
-     * @param array 2维数组，例如：
-     * array(
-     *      1 => array('id'=>'1','pid'=>0,'name'=>'一级栏目一'),
-     *      2 => array('id'=>'2','pid'=>0,'name'=>'一级栏目二'),
-     *      3 => array('id'=>'3','pid'=>1,'name'=>'二级栏目一'),
-     *      4 => array('id'=>'4','pid'=>1,'name'=>'二级栏目二'),
-     *      5 => array('id'=>'5','pid'=>2,'name'=>'二级栏目三'),
-     *      6 => array('id'=>'6','pid'=>3,'name'=>'三级栏目一'),
-     *      7 => array('id'=>'7','pid'=>3,'name'=>'三级栏目二')
-     *      )
+     * @param array 2维数组
      */
     function __construct($arr = array()) {  //初始化array
         $this->arr = $arr;
