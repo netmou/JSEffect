@@ -1,33 +1,67 @@
+@charset "utf-8";
 html{
     height:100%;
     overflow:auto;
 }
 body{
     margin:0px;
-    font-family:"微软雅黑";
+    font-family:"微软雅黑", "Microsoft YaHei", sans-serif;
     overflow:hidden;
 }
 a{
     text-decoration: none;
+    outline:none !important;
     color:#333;
 }
-ul{
-    margin:0px auto;
+a:hover{
+    text-decoration:underline;
+    color:#BF0000;
+}
+caption{
+    text-align:center;
+}
+
+input[type="text"]{
     padding:0px;
-    list-style: none;
+    border:1px solid #666;
+    box-sizing: border-box;
+}
+input[type="password"]{
+    padding:0px;
+    border:1px solid #666;
+    box-sizing: border-box;
+}
+button, input[type="button"], input[type="reset"], input[type="submit"]{
+    box-sizing: border-box;
+    cursor: pointer;
+}
+iframe{
+    display:block;
+    border:none;
 }
 img{
     display:inline-block;
     border:none;
 }
-
+small {
+    font-size: 12px;
+}
 table{
     border-collapse:collapse;
+    border-spacing:0;
 }
 td,th{
     border:solid 1px #ddd;
+    font-weight:normal;
 }
-
+ul{
+    padding:0px;
+    margin:0px auto;
+    list-style: none;
+}
+.abs {
+    position:absolute;
+}
 .btn {
     display: inline-block;
     outline: none;
@@ -35,7 +69,7 @@ td,th{
     cursor: pointer;
     text-align: center;
     text-decoration: none;
-    padding: 0 0.4em;
+    padding: 0 0.45em;
     line-height:1.7;
     background-image:linear-gradient(180deg, #f9f9f9,#eee);
     border-radius: 0.4em;
@@ -107,7 +141,7 @@ td,th{
 }
 .gray:active{
     top:1px;
-    box-shadow: 0 1px 3px #666 inset,0 2px 0 #fff;
+    box-shadow: 1px 1px 3px #666 inset,1px 2px 0 #fff;
     background-image:linear-gradient(180deg,#a8a8a8,#b0b0b0);
 }
 .red:active{
@@ -155,16 +189,27 @@ td,th{
     margin:0px auto;
     overflow: hidden;
 }
+.even{
+    background:#EFEFEF;
+}
 .hide{
     display:none;
 }
 .inb{
     display:inline-block;
 }
+.ivb{
+    visibility:hidden;
+}
 .lft{
     float:left;
 }
-
+.rlt{
+    position: relative;
+}
+.nbd{
+    border:none;
+}
 .rgt{
     float:right;
 }
@@ -179,8 +224,16 @@ td,th{
     clear: both;
     visibility: hidden;
 }
-.rnk li{
-    float:left;
+.rnk > li{
+    display:inline-block;
+    padding:0px 2px;
+}
+.mid{
+    display:inline-block;
+    vertical-align:middle;
+}
+.odd{
+    background-color:#f7f7f7;
 }
 .show{
     display:block;
