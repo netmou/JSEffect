@@ -1,9 +1,11 @@
 <?php
+
 /**
  * 请尽量将slash参数开启，防止SQL注入
  * @author netmou <leiyanfo@sina.com>
  */
 class mysql {
+
     private $Host = 'localhost';
     private $dbName = 'test';
     private $UserName = 'root';
@@ -91,7 +93,7 @@ class mysql {
      * @param mixed $field
      * @return mixed
      */
-    public function fetchField($sql=null, $field = 0, $row = 0) {
+    public function fetchField($sql = null, $field = 0, $row = 0) {
         if ($sql) {
             $this->execute($sql);
         }
@@ -225,7 +227,7 @@ class mysql {
                 }
                 $sql = $sql . ' and `' . $key . '`=' . $val;
             }
-        } else if($condition) {
+        } else if ($condition) {
             $condition = $slash ? addslashes($condition) : $condition;
             $sql = $sql . ' ' . $condition;
         }
@@ -243,7 +245,7 @@ class mysql {
      * @return array
      */
     function likeAll($table, $fields, $likes, $keyword, $condition = null, $slash = false) {
-        $keyword=$slash ? addslashes($keyword) : $keyword;
+        $keyword = $slash ? addslashes($keyword) : $keyword;
         $like = ' and concat_ws(\'-|-\',' . implode(',', $likes) . ') like ' . "'%{$keyword}%' ";
         if (is_array($condition)) {
             foreach ($condition as $key => $val) {
@@ -252,7 +254,7 @@ class mysql {
                 }
                 $like = $like . ' and `' . $key . '`=' . $val;
             }
-        } else if($condition) {
+        } else if ($condition) {
             $condition = $slash ? addslashes($condition) : $condition;
             $like = $like . ' ' . $condition;
         }
@@ -284,7 +286,7 @@ class mysql {
                 }
                 $sql = $sql . ' and `' . $key . '`=' . $val;
             }
-        } else if($condition) {
+        } else if ($condition) {
             $condition = $slash ? addslashes($condition) : $condition;
             $sql = $sql . ' ' . $condition;
         }
@@ -310,7 +312,7 @@ class mysql {
                 }
                 $sql = $sql . ' and `' . $key . '`=' . $val;
             }
-        } else if($condition) {
+        } else if ($condition) {
             $condition = $slash ? addslashes($condition) : $condition;
             $sql = $sql . ' ' . $condition;
         }

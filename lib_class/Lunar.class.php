@@ -139,7 +139,7 @@ class Lunar {
      */
     function getSolarMonthDays($year, $month) {
         $monthHash = array('1' => 31, '2' => $this->isLeapYear($year) ? 29 : 28, '3' => 31, '4' => 30, '5' => 31,
-         '6' => 30, '7' => 31, '8' => 31, '9' => 30, '10' => 31,'11' => 30, '12' => 31);
+            '6' => 30, '7' => 31, '8' => 31, '9' => 30, '10' => 31, '11' => 30, '12' => 31);
         return $monthHash["$month"];
     }
 
@@ -352,4 +352,5 @@ class Lunar {
     }
 
 }
+
 ?>

@@ -5,7 +5,7 @@ html{
 }
 body{
     margin:0px;
-    font-family:"微软雅黑", "Microsoft YaHei", sans-serif;
+    font-family:"Microsoft YaHei", "微软雅黑", sans-serif;
     overflow:hidden;
 }
 a{
@@ -17,23 +17,35 @@ a:hover{
     text-decoration:underline;
     color:#BF0000;
 }
+textarea{
+    overflow: auto;
+}
 caption{
     text-align:center;
 }
-
-input[type="text"]{
-    padding:0px;
-    border:1px solid #666;
+input{
+    display:inline-block;
+    /*line-height:1.7;*/
     box-sizing: border-box;
+}
+input[type="text"]{
+    padding:2px 0px;
+    border:1px solid #aaa;
 }
 input[type="password"]{
-    padding:0px;
-    border:1px solid #666;
-    box-sizing: border-box;
+    padding:2px 0px;
+    border:1px solid #aaa;
 }
 button, input[type="button"], input[type="reset"], input[type="submit"]{
+    display:inline-block;
     box-sizing: border-box;
-    cursor: pointer;
+    cursor:pointer;
+}
+dl{
+    margin:0px auto;
+}
+dd{
+    margin:0px auto;
 }
 iframe{
     display:block;
@@ -186,8 +198,8 @@ ul{
     visibility: hidden;
 }
 .cnt{
+    display:block;
     margin:0px auto;
-    overflow: hidden;
 }
 .even{
     background:#EFEFEF;
