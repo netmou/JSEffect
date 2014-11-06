@@ -1,1 +1,5 @@
-/nbproject/private/
+/nbproject/
+/phpexcel/
+/static/DatePicker/
+/static/dtree/
+/static/ztree/

@@ -216,13 +216,64 @@ class Utility {
     }
 
     /**
+    * 将从数据库中返回的多行数据按字段求和，返回一维数组,
+    */
+    public function multiSum($data){
+        for($i=1;$i<count($data);$i++){
+            foreach($data[$i] as $key=>$val){
+                $data[0][$key]+=$val;
+            }
+        }
+        return $data[0];
+    }
+
+    /**
+    * 分组统计转换 eg. select count(xx)as num, xx from... group by xx;
+    */
+    public function groupConvert ($data,$key,$val){
+        $tmp=array();
+        for($i=0;$i<count($data);$i++){
+            $index=$data[$i][$key];
+            $tmp[$index]=$data[$i][$val];
+        }
+        return $tmp;
+    }
+
+    /**
+    * 将数据转换成地址形式：key=val&key2=val2&...
+    */
+    public function dataToUrl($data){
+        $addr='1=1&';
+        foreach ($data as $key => $val) {
+            if($val !== null && is_scalar($val)) {
+                $addr.="{$key}={$val}&";
+            }
+        }
+        return substr($addr, 0, strlen($addr) - 1);
+    }
+
+    public function formInput($cat,$name,$value=null,$attr=null){
+        return "<input type=\"{$cat}\" name=\"{$name}\" value=\"{$value}\" {$attr}/>\n";
+    }
+    public function formSelect($name,$data,$sid,$attr){
+        $str="<select name=\"{$name}\" {$attr}>\n";
+        foreach($data as $key=>$val){
+            $select=($key==$sid)?'"selected"="selected"':null;
+            $str.="<option {$select} value=\"{$key}\">{$val}</option>\n";
+        }
+        return $str."</select>\n";
+    }
+    public function formTextArea($name,$value=null,$attr=null){
+        return "<textarea  name=\"{$name}\" {$attr}>{$value}</textarea>";
+    }
+
+    /**
      * 加密字符串
      */
     private function encrypt($encrypt, $key = "~QaZ`!1X2s3C4W5V6d7B8@9N0f-M=E,g") {
         $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
         $passcrypt = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $key, $encrypt, MCRYPT_MODE_ECB, $iv);
-        $encode = base64_encode($passcrypt);
-        return $encode;
+        return base64_encode($passcrypt);
     }
 
     /**
@@ -231,10 +282,9 @@ class Utility {
     private function decrypt($decrypt, $key = "~QaZ`!1X2s3C4W5V6d7B8@9N0f-M=E,g") {
         $decoded = base64_decode($decrypt);
         $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
-        $decrypted = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, $decoded, MCRYPT_MODE_ECB, $iv);
-        return $decrypted;
+        return mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, $decoded, MCRYPT_MODE_ECB, $iv);
     }
 
 }
-
+$func=new Utility();
 ?>

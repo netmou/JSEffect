@@ -40,7 +40,7 @@ class ValidateCode {
     private function createFont() {
         $_x = $this->width / $this->codelen;
         for ($i = 0; $i < $this->codelen; $i++) {
-            $this->fontcolor = imagecolorallocate($this->img, mt_rand(0, 156), mt_rand(0, 156), mt_rand(0, 156));
+            $this->fontcolor = imagecolorallocate($this->img, mt_rand(0, 128), mt_rand(0, 128), mt_rand(0, 128));
             imagettftext($this->img, $this->fontsize, mt_rand(-30, 30), $_x * $i + mt_rand(1, 5), $this->height / 1.4, $this->fontcolor, $this->font, $this->code[$i]);
         }
     }
@@ -48,12 +48,12 @@ class ValidateCode {
     //生成线条、雪花
     private function createLine() {
         //线条
-        for ($i = 0; $i < 6; $i++) {
-            $color = imagecolorallocate($this->img, mt_rand(0, 156), mt_rand(0, 156), mt_rand(0, 156));
+        for ($i = 0; $i < 3; $i++) {
+            $color = imagecolorallocate($this->img, mt_rand(128, 255), mt_rand(128, 255), mt_rand(128, 255));
             imageline($this->img, mt_rand(0, $this->width), mt_rand(0, $this->height), mt_rand(0, $this->width), mt_rand(0, $this->height), $color);
         }
         //雪花
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 30; $i++) {
             $color = imagecolorallocate($this->img, mt_rand(200, 255), mt_rand(200, 255), mt_rand(200, 255));
             imagestring($this->img, mt_rand(1, 5), mt_rand(0, $this->width), mt_rand(0, $this->height), '*', $color);
         }

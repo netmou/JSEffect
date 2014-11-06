@@ -13,14 +13,14 @@ class Page {
 
     /**
      * @$offset   每页显示的条目数
-      +---------------------------------------------------------------
+     * +---------------------------------------------------------------
      * @total     总条目数
      * @current_num     当前被选中的页
-      +---------------------------------------------------------------
+     * +---------------------------------------------------------------
      * @showpage       每次显示的页数
-      +---------------------------------------------------------------
+     * +---------------------------------------------------------------
      * @pagelink    每个分页的链接
-      +---------------------------------------------------------------
+     * +---------------------------------------------------------------
      * example：   第1/453页 [首页] [上页] [1] [2] [3] [4] [下页] [尾页]
      */
 
@@ -43,8 +43,8 @@ class Page {
         $homepage = $this->pagelink . '1';
         $rearpage = $this->pagelink . $pages;
         $prevpage = $this->pagelink . ($this->curpage - 1);
-        echo "<span class='pagesinfo'>共<b>{$this->total}</b>条记录</span>&nbsp;&nbsp;";
-        echo "<span class='pagesinfo'><b>{$this->curpage}/{$pages}</b>页</span>&nbsp;&nbsp;";
+        echo "<span class='pagesinfo'>共<b>{$this->total}</b>条记录</span>";
+        echo "<span class='pagesinfo'><b>{$this->curpage}/{$pages}</b>页</span>";
         echo "<span id='pages'>";
         echo "<a href='{$homepage}'><span>首页</span></a>";
         if ($this->curpage == 1) {
@@ -72,7 +72,6 @@ class Page {
         echo "<a href='{$rearpage}'><span>尾页</span></a>";
         echo '</span>';
     }
-
 }
 
 ?>

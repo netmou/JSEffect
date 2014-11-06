@@ -1,48 +1,81 @@
 <?php
-
-class MySessionHandler implements SessionHandlerInterface {
-
-    private $savePath;
-
-    public function open($savePath, $sessionName) {
-        $this->savePath = $savePath;
-        if (!is_dir($this->savePath)) {
-            mkdir($this->savePath, 0777);
-        }
-        return true;
-    }
-
-    public function close() {
-        return true;
-    }
-
-    public function read($id) {
-        return (string) file_get_contents("$this->savePath/sess_$id");
-    }
-
-    public function write($id, $data) {
-        return file_put_contents("$this->savePath/sess_$id", $data) === false ? false : true;
-    }
-
-    public function destroy($id) {
-        $file = "$this->savePath/sess_$id";
-        if (file_exists($file)) {
-            unlink($file);
-        }
-        return true;
-    }
-
-    public function gc($maxlifetime) {
-        foreach (glob("$this->savePath/sess_*") as $file) {
-            if (filemtime($file) + $maxlifetime < time() && file_exists($file)) {
-                unlink($file);
+class Session{
+    const SESSION_NAME="mySession";
+    const SESSION_EXPIRE=30;
+    public $status=false;
+    public $cache=false;
+    public function start(){
+        if(!$this->status){
+            if($this->cache){
+                session_cache_limiter('private');
+                session_cache_expire(self::SESSION_EXPIRE);
             }
+            session_name(self::SESSION_NAME);
+            session_start();
+            $this->status=true;
         }
-        return true;
     }
-}
+    public function commit(){
+        if($this->status){
+            session_write_close();
+            $this->status=false;
+        }
+    }
+    public function check($key,$url,$val=null){
+        $this->start();
+        if($val && $this->get($key)==$val){
+            return null;
+        }else if($this->has($key)){
+            return null;
+        }
+        $this->commit();
+        header("location: {$url}");
+        exit(0);
+    }
+    public function has($key){
+        $this->start();
+        return isset($_SESSION[$key]);
+    }
+    public function set($key,$val){
+        $this->start();
+        $_SESSION[$key]=$val;
+    }
+    public function delete($key){
+        $this->start();
+        unset($_SESSION[$key]);
+    }
+    public function get($key){
+        $this->start();
+        return $_SESSION[$key];
+    }
+    public function getId(){
+        $this->start();
+        return session_id();
+    }
+    public function abort(){
+        if($this->status){
+            session_abort();
+            $this->status=false;
+        }
+    }
+    public function login(){
+        $this->start();
+        session_regenerate_id(true);
+    }
+    public function logout(){
+        $this->start();
+        $_SESSION = array();
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
+            );
+        }
+        session_destroy();
+        $this->status=false;
+    }
 
-$handler = new MySessionHandler();
-session_set_save_handler($handler, true);
-session_start();
+}
+$store=new Session();
 ?>

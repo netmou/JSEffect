@@ -2,12 +2,13 @@
 
 /**
  * 请尽量将slash参数开启，防止SQL注入
+ * 在服务器上部署时不要忘记关闭调试模式
  * @author netmou <leiyanfo@sina.com>
  */
 class mysql {
 
     private $Host = 'localhost';
-    private $dbName = 'test';
+    private $dbName = 'ocean';
     private $UserName = 'root';
     private $Password = '123456';
     private $dbCharSet = 'utf8';
@@ -126,7 +127,7 @@ class mysql {
      * @return integer
      */
     public function lastInsertId() {
-        return mysql_insert_id();
+        return mysql_insert_id($this->linkID);
     }
 
     /**
