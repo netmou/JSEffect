@@ -5,7 +5,7 @@
  * 在服务器上部署时不要忘记关闭调试模式
  * @author netmou <leiyanfo@sina.com>
  */
-class mysql {
+class mysql { 
 
     private $Host = 'localhost';
     private $dbName = 'ocean';
