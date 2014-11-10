@@ -1,5 +1,9 @@
 <?php
-
+!defined(IN_MY_PHP) && die(0);
+/**
+ * 一个分页类
+ * @author netmou <leiyanfo@sina.com>
+ */
 class Page {
 
     private $offset; //每页显示的条目数

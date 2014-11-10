@@ -1,5 +1,9 @@
 <?php
-
+!defined(IN_MY_PHP) && die(0);
+/**
+ * 一个字体可控的验证码生成类
+ * @author netmou <leiyanfo@sina.com>
+ */
 class ValidateCode {
 
     private $charset = 'abcdefghkmnprstuvwxy3456789'; //随机因子

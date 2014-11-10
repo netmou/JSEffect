@@ -1,5 +1,9 @@
 <?php
-
+!defined(IN_MY_PHP) && die(0);
+/**
+ * 一个阴历及生肖等中国传统日期的类
+ * @author netmou <leiyanfo@sina.com>
+ */
 class Lunar {
 
     var $MIN_YEAR = 1891;

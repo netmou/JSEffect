@@ -1,4 +1,9 @@
 <?php
+!defined(IN_MY_PHP) && die(0);
+/**
+* Session管理类，修补了Sessoin固定攻击
+* @author netmou <leiyanfo@sina.com>
+*/
 class Session {
 	const SESSION_NAME = "mySession";
 	const SESSION_EXPIRE = 30;

@@ -1,11 +1,30 @@
 <?php
-
+!defined(IN_MY_PHP) && die(0);
 /**
  * 请尽量将slash参数开启，防止SQL注入
  * 在服务器上部署时不要忘记关闭调试模式
  * @author netmou <leiyanfo@sina.com>
  */
-class mysql { 
+ class MysqlException extends Exception{
+
+     protected $msg;
+     protected $sql;
+
+     public function __construct($msg,$sql=null){
+         $this->msg=$msg;
+         $this->sql=$sql;
+         parent::__construct('the sql info:'.$sql."\n".'the error msg:'.$msg."\n");
+     }
+     public function __tostring(){
+         if($this->sql){
+             $tmp='the sql info:'.$sql."\n";
+         }
+         $tmp.='the error msg:'.$this->getMessage()."\n";
+         return $tmp.'in'.$this->getFile().'on line'.$this->getLine();
+     }
+ }
+
+class mysql {
 
     private $Host = 'localhost';
     private $dbName = 'ocean';
@@ -30,11 +49,11 @@ class mysql {
         if (!$this->linkID) {
             $this->linkID = mysql_connect($host, $user, $pass, true);
             if (!$this->linkID && $this->debug) {
-                exit(mysql_error());
+                throw new MysqlException(mysql_error());
             }
         }
         if (!mysql_select_db($dbName, $this->linkID) && $this->debug) {
-            exit(mysql_error($this->linkID));
+            throw new MysqlException(mysql_error($this->linkID));
         }
         mysql_query("SET NAMES '" . $this->dbCharSet . "'", $this->linkID);
         mysql_query("SET sql_mode='NO_ZERO_IN_DATE'", $this->linkID);
@@ -58,7 +77,7 @@ class mysql {
         $this->lastSql = $sql;
         $this->queryID = mysql_query($sql);
         if (false === $this->queryID && $this->debug) {
-            exit(mysql_error($this->linkID) . '...With the sql info:' . $this->lastSql);
+            throw new MysqlException(mysql_error($this->linkID), $this->lastSql);
         }
         return $this->queryID;
     }
@@ -209,7 +228,7 @@ class mysql {
      */
     public function update($table, $data, $condition, $slash = false) {
         if (empty($condition) && $this->debug) {
-            exit('没有指定条件，更新整个表很危险');
+            throw new MysqlException("没有指定条件，更新整个表很危险");
         }
         $sql = 'UPDATE `' . trim($table) . '` SET ';
         foreach ($data as $key => $val) {
@@ -303,7 +322,7 @@ class mysql {
      */
     public function delete($table, $condition = null, $slash = false) {
         if (empty($condition) && $this->debug) {
-            exit('没有指定条件，清空表很危险');
+            throw new MysqlException('没有指定条件，清空表很危险');
         }
         $sql = 'delete from `' . $table . '` where 1=1';
         if (is_array($condition)) {
@@ -335,6 +354,5 @@ class mysql {
     }
 
 }
-
 $mysql = new mysql();
 ?>
