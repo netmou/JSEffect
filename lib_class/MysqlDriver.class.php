@@ -93,21 +93,6 @@ class mysql {
     }
 
     /**
-     * 取得单条记录
-     * @param string $sql
-     * @return integer
-     */
-    public function fetchRow($sql = null) {
-        if ($sql) {
-            $this->execute($sql);
-        }
-        if (is_resource($this->queryID)) {
-            return mysql_fetch_array($this->queryID, MYSQL_ASSOC);
-        }
-        return null;
-    }
-
-    /**
      * 取得结果集中某个字段值
      * @param string $sql
      * @param mixed $field
@@ -119,6 +104,21 @@ class mysql {
         }
         if (is_resource($this->queryID) && $row < mysql_num_rows($this->queryID)) {
             return mysql_result($this->queryID, $row, $field);
+        }
+        return null;
+    }
+
+    /**
+     * 取得单条记录
+     * @param string $sql
+     * @return integer
+     */
+    public function fetchRow($sql = null) {
+        if ($sql) {
+            $this->execute($sql);
+        }
+        if (is_resource($this->queryID)) {
+            return mysql_fetch_array($this->queryID, MYSQL_ASSOC);
         }
         return null;
     }
@@ -206,11 +206,10 @@ class mysql {
         $values = $fields = array();
         foreach ($data as $key => $val) {
             if ($val !== null && is_scalar($val)) {
-                $value = $slash ? '"' . addslashes($val) . '"' : '"' . $val . '"';
+                $values[] = $slash ? '"' . addslashes($val) . '"' : '"' . $val . '"';
             } else {
-                $value = 'NULL';
+                $values[] = 'NULL';
             }
-            $values[] = $value;
             $fields[] = '`' . $key . '`';
         }
         $table = '`' . trim($table) . '`';
@@ -296,7 +295,7 @@ class mysql {
             }
             $selected = substr($selected, 0, strlen($selected) - 1);
         } else {
-            $selected = trim($fields);
+            $selected = $slash ? addslashes($fields) : $fields;
         }
         $sql = 'select ' . $selected . ' from `' . trim($table) . '` where 1=1 ';
         if (is_array($condition)) {

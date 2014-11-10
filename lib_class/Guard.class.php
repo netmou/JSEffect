@@ -29,13 +29,13 @@ class Guard extends Exception {
     }
 
     public static function exceptDesc(\Exception $e) {
-        $desc = "程序有问题呃！\n";
-        $desc = $desc . "异常类型：" . get_class($e) . "\n";
-        $desc = $desc . "错误级别：" . self::$errorLevel . "\n";
-        $desc = $desc . "错误信息：" . $e->getMessage() . "\n";
-        $desc = $desc . "错误位置：" . $e->getFile() . "\n";
-        $desc = $desc . "错误行号：" . $e->getLine() . "\n";
-        $desc = $desc . "错误追踪：\n" . $e->getTraceAsString() . "\n";
+        $desc = "you program has a problem\n";
+        $desc = $desc . "ExceptionType:" . get_class($e) . "\n";
+        $desc = $desc . "ErrorLevel:" . self::$errorLevel . "\n";
+        $desc = $desc . "ErrorMessage:" . $e->getMessage() . "\n";
+        $desc = $desc . "ErrorFile:" . $e->getFile() . "\n";
+        $desc = $desc . "ErrorLine:" . $e->getLine() . "\n";
+        $desc = $desc . "ErrorTrace:\n" . $e->getTraceAsString() . "\n";
         print nl2br(htmlentities($desc));
         exit(0);
     }

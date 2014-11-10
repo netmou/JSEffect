@@ -140,7 +140,7 @@ class Utility {
      * 将PHP变量的值嵌入在js代码中，使其成为合法的js常量
      * 本函数针对外部的输入，不适用于内部输入
      */
-    public function toJsVar($val, $slash = false) {
+    public function toJsVar($val,$quote='"', $slash = false) {
         if (is_scalar($val)) {
             if (is_numeric($val)) {
                 return $val;
@@ -155,7 +155,7 @@ class Utility {
                 $val = str_replace("\t", '\t', $val); //水平制表
                 $val = str_replace("\n", '\n', $val); //换行
                 $val = str_replace("\r", '\r', $val); //回车
-                return '"' . $val . '"';
+                return $quote . $val . $quote;
             } else if (is_bool($val)) {
                 return $val ? 'true' : 'false';
             }
@@ -232,7 +232,7 @@ class Utility {
     }
 
     /**
-    * 分组统计转换 eg. select count(xx)as num, xx from... group by xx;
+    * 分组统计转换 eg. select count(xx) as num, xx from... group by xx;
     */
     public function groupConvert ($data,$key,$val){
         $tmp=array();
