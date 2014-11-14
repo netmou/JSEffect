@@ -1,5 +1,5 @@
 <?php
-!defined(IN_MY_PHP) && die(0);
+IN_MY_PHP||die(0);
 /**
  * 异常捕获及错误处理类
  * @author netmou <leiyanfo@sina.com>
@@ -27,6 +27,39 @@ class Guard extends Exception {
         }
         throw new ErrorException($msg, 0, $errno, $file, $line);
     }
+    public static function formatTrace($e){
+        $traceLog=null;
+        $traces = $e->getTrace();
+        $xh=0;
+        foreach ($traces as $k => $trace) {
+            if (empty($trace['file'])) {
+                try {
+                    if (isset($trace['class'])) {
+                        $reflection = new ReflectionMethod($trace['class'], $trace['function']);
+                    } else {
+                        $reflection = new ReflectionFunction($trace['function']);
+                    }
+                    $trace['file'] = $reflection->getFileName();
+                    $trace['line'] = $reflection->getStartLine();
+                } catch (Exception $e) {
+                    continue;
+                }
+            }
+            $traceLog.='#'. (++$xh).' ';
+            if(isset($trace['class'])){
+                $traceLog.=$trace['class'].$trace['type'].$trace['function'];
+            }else{
+                $traceLog.=$trace['function'];
+            }
+            $file = str_replace(RTPATH, '', $trace['file']);
+            $traceLog.='() On line ' . $trace['line'] . ' In file ' . $file;
+            if(isset($trace['args']) && is_array($trace['args'])){
+                $traceLog.=' With the args: '.implode(',',$trace['args']);
+            }
+            $traceLog.="\n";
+        }
+        return $traceLog;
+    }
 
     public static function exceptDesc(\Exception $e) {
         $desc = "you program has a problem\n";
@@ -35,7 +68,7 @@ class Guard extends Exception {
         $desc = $desc . "ErrorMessage:" . $e->getMessage() . "\n";
         $desc = $desc . "ErrorFile:" . $e->getFile() . "\n";
         $desc = $desc . "ErrorLine:" . $e->getLine() . "\n";
-        $desc = $desc . "ErrorTrace:\n" . $e->getTraceAsString() . "\n";
+        $desc = $desc . "ErrorTrace:\n" . self::formatTrace($e) . "\n";
         print nl2br(htmlentities($desc));
         exit(0);
     }

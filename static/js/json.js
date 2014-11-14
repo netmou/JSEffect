@@ -23,7 +23,12 @@ function toJSON(obj) {
             }
         }
         var pos = text.lastIndexOf(",");
-        text = text.substring(0, pos) + "]";
+        if(pos>0){
+            text = text.substring(0, pos) + "]";
+        }else{
+            text+="]";
+        }
+
     } else if (obj instanceof Object) {
         text = "{";
         for (var p in obj) {
@@ -46,7 +51,11 @@ function toJSON(obj) {
             }
         }
         var pos = text.lastIndexOf(",");
-        text = text.substring(0, pos) + "}";
+        if(pos>0){
+            text = text.substring(0, pos) + "}";
+        }else{
+            text+="}";
+        }
     }
     return text;
 }
@@ -63,4 +72,7 @@ function toUnicode(str) {
         }
     }
     return result;
+}
+function parseJSON(json){
+    return eval('(' + json + ')');
 }

@@ -1,5 +1,5 @@
 <?php
-!defined(IN_MY_PHP) && die(0);
+IN_MY_PHP||die(0);
 /**
  * 请尽量将slash参数开启，防止SQL注入
  * 在服务器上部署时不要忘记关闭调试模式
@@ -13,7 +13,8 @@
      public function __construct($msg,$sql=null){
          $this->msg=$msg;
          $this->sql=$sql;
-         parent::__construct('the sql info:'.$sql."\n".'the error msg:'.$msg."\n");
+         $msg=isset($sql)?$msg."\n".' with the sql: '.$sql:$msg;
+         parent::__construct($msg,0);
      }
      public function __tostring(){
          if($this->sql){
@@ -24,7 +25,7 @@
      }
  }
 
-class mysql {
+class MysqlDriver {
 
     private $Host = 'localhost';
     private $dbName = 'ocean';
@@ -353,5 +354,4 @@ class mysql {
     }
 
 }
-$mysql = new mysql();
 ?>

@@ -1,5 +1,5 @@
 <?php
-!defined(IN_MY_PHP) && die(0);
+IN_MY_PHP||die(0);
 /**
  * 一些有价值的常用的函数工具类
  * @author netmou <leiyanfo@sina.com>
@@ -275,5 +275,4 @@ class Utility {
     }
 
 }
-$func=new Utility();
 ?>
