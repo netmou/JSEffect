@@ -52,21 +52,21 @@ class Guard extends Exception {
                 $traceLog.=$trace['function'];
             }
             $file = str_replace(RTPATH, '', $trace['file']);
-            $traceLog.='() On line ' . $trace['line'] . ' In file ' . $file;
+            $traceLog.='() On line ' . $trace['line'] . ' In file "' . $file . '"';
             if(isset($trace['args']) && is_array($trace['args'])){
-                $traceLog.=' With the args: '.implode(',',$trace['args']);
+                $traceLog.=' With the args: "'.implode(',',$trace['args']).'"';
             }
             $traceLog.="\n";
         }
         return $traceLog;
     }
 
-    public static function exceptDesc(\Exception $e) {
-        $desc = "you program has a problem\n";
+    public static function exceptDesc(Exception $e) {
+        $desc = "Your program has a problem\n";
         $desc = $desc . "ExceptionType:" . get_class($e) . "\n";
         $desc = $desc . "ErrorLevel:" . self::$errorLevel . "\n";
         $desc = $desc . "ErrorMessage:" . $e->getMessage() . "\n";
-        $desc = $desc . "ErrorFile:" . $e->getFile() . "\n";
+        $desc = $desc . "ErrorFile:" . str_replace(RTPATH, '', $e->getFile()) . "\n";
         $desc = $desc . "ErrorLine:" . $e->getLine() . "\n";
         $desc = $desc . "ErrorTrace:\n" . self::formatTrace($e) . "\n";
         print nl2br(htmlentities($desc));

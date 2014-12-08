@@ -1,0 +1,49 @@
+table.mytb{
+    font-size:12px;
+    line-height:2.6em;
+    border:1px solid #ddd;
+    background:#fff;
+}
+.mytb td,.mytb th{
+    padding:0px 5px;
+    text-align:left;
+    border-bottom:1px solid #eee;
+}
+.mytb caption{
+    border-top:#417EB7 solid 2px;
+    text-align:center;
+    background:url(../images/th_bj2.jpg) ;
+    font-size:10pt;
+    margin:0px;
+    font-weight:bold;
+}
+.mytb tr.wakeup{
+    background:#FFFCED;
+    color:#008000;
+}
+.mytb .wakeup th{
+    font-weight:normal;
+    text-align:center;
+}
+.mytb tr.column{
+    background:#F5FAFE;
+    border-bottom: #d5dfe8 1px solid;
+}
+.mytb tr.data{
+    border-bottom: #eee 1px solid;
+}
+.mytb tr.rear{
+    background:#F5FAFE;
+}
+
+.pages span{
+    display:inline-block;
+    margin:0px 5px;
+}
+span.digit{
+    color:blue;
+}
+span.cur{
+    color:red;
+    font-weight:bold;
+}

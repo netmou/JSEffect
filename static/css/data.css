@@ -1,0 +1,141 @@
+caption{
+    border-top:#417EB7 solid 2px;
+    text-align:center;
+    background:url(../images/th_bj2.jpg) ;
+    height:30px;
+    line-height:30px;
+    font-size:10pt;
+    margin:0px;
+    font-weight:bold;
+}
+th {
+    height:30px;
+    line-height:30px;
+    background:#F5FAFE;
+    font-size:12px;
+}
+th.maxw{
+    max-width:100px;
+}
+td {
+    border:#C0E1E8 solid 1px;
+    height:30px;
+    line-height:30px;
+    vertical-align:middle;
+    color:#333;
+    font-size:12px;
+    padding:2px 5px;
+}
+td.minw{
+    min-width:60px !important;
+}
+input,select,textarea{
+    vertical-align:middle;
+}
+select,optgroup{
+    font-size:12px;
+}
+.data {
+    width:100%;
+    background:#fff;
+}
+.data input[type='password'],.data input[type='text']{
+    height:20px;
+    width:140px;
+}
+.data tr td:first-child{
+    background:#F4F8FC;
+}
+.data td.single{
+    background:#fff !important;
+    text-align:center;
+}
+.data2 td{
+    text-align:center;
+    vertical-align:middle;
+    border:1px solid #aaa;
+}
+.data2 td.bold{
+    font-weight:700;
+}
+.list {
+    width:100%;
+    background:#fff;
+}
+.list td{
+    text-align:center;
+}
+.list th.pool{
+    border:none;
+    height:25px;
+    line-height:25px;
+    text-align:left;
+    padding-left:20px;
+    border-top:#eed27f solid 1px;
+    border-bottom:#eed27f solid 1px;
+    background:#FFFCED !important;
+    /*border:1px solid #FFBE7A;*/
+    color:#008000;
+}
+.list th.bold{
+    font-weight:700 !important;
+}
+.list th.single{
+    text-align:center !important;
+}
+.list td.info{
+    height:40px;
+    line-height:40px;
+    text-align:right;
+}
+.list td.info1{
+    height:40px;
+    line-height:40px;
+    text-align:center;
+}
+.list #pages a{
+	display:inline-block;
+	height:22px;
+	line-height:22px;
+	font-size:12px;
+	cursor:pointer;
+    padding-left:8px;
+	margin:0 2px;
+}
+.list #pages a span{
+    display: inline-block;
+    height: 22px;
+    line-height: 22px;
+    padding-right: 8px;
+}
+
+/**正常*/
+.list #pages a{
+	background:url(../images/pages.gif) no-repeat left top;
+}
+.list #pages a span{
+    background: url(../images/pages.gif) no-repeat right top;
+}
+/**激活*/
+.list #pages a:hover{
+	color:#fff;
+	background:url(../images/pages.gif) no-repeat left -28px;
+}
+.list #pages a:hover span{
+	background:url(../images/pages.gif) no-repeat right -28px;
+}
+/**不可用*/
+.list #pages a.disable{
+    color:#888;
+    cursor:text;
+    background:url(../images/pages.gif) no-repeat left top;
+}
+.list #pages a.disable span{
+    background: url(../images/pages.gif) no-repeat right top;
+}
+.list #pages a.disable:hover{
+    background:url(../images/pages.gif) no-repeat left top;
+}
+.list #pages a.disable:hover span{
+	background:url(../images/pages.gif) no-repeat right top;
+}

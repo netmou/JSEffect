@@ -1,7 +1,7 @@
 <?php
-!defined(IN_MY_PHP) && die(0);
+IN_MY_PHP||die(0);
 /**
- * 一个字体可控的验证码生成类
+ * 一个字体大小可控的验证码生成类
  * @author netmou <leiyanfo@sina.com>
  */
 class ValidateCode {
@@ -23,7 +23,7 @@ class ValidateCode {
         $this->height = $height;
         $this->codelen = $codelen;
         $this->fontsize = $fontsize;
-        $this->font = dirname(__FILE__) . '/font/elephant.ttf';
+        $this->font = dirname(__FILE__) . '/font/Comfortaa-Regular.ttf';
     }
 
     //生成随机码
@@ -86,7 +86,6 @@ class ValidateCode {
     public function getCode() {
         return strtolower($this->code);
     }
-
 }
 
 ?>

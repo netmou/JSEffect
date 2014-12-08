@@ -1,7 +1,7 @@
 <?php
 IN_MY_PHP||die(0);
 /**
- * 一些有价值的常用的函数工具类
+ * 一个有价值工具类
  * @author netmou <leiyanfo@sina.com>
  */
 class Utility {
@@ -41,7 +41,7 @@ class Utility {
     }
 
     /**
-     * 判断点是否在多边形内,算法基于多边形外的点与多边形相交，有偶数个交点
+     * 判断点是否在多边形内,算法基于多边形外的点与多边形的边相交，有偶数个交点
      */
     public function pointInPolygon($p, $points) {
         $cross = 0;
@@ -122,15 +122,26 @@ class Utility {
     }
 
     /**
+     * 临时重置页面
+     */
+
+    public function redirect($url) {
+        if (! headers_sent()) {
+            header('HTTP/1.1 302 Temporarily Moved');
+            header('Location: ' . $url);
+            exit(0);
+        }
+        trigger_error("Header content has been sent!",E_USER_ERROR);
+    }
+
+    /**
      * 给出js-alert提示并跳转页面
      */
-    public function alert($msg, $addr = null) {
+    public function alert($msg, $addr=null) {
         echo "<script>\n";
         echo "alert('{$msg}');\n";
-        if ($addr != "") {
+        if ($addr !=null) {
             echo "location.href='{$addr}';\n";
-        } else {
-            echo "history.go(-1);\n";
         }
         echo "</script>";
         exit(0);
@@ -184,6 +195,26 @@ class Utility {
     }
 
     /**
+    * 移除全局变量的影响 only for php5.2 -
+    */
+    public function clearGlobal(){
+        if (!ini_get(register_globals)) {
+            return null;
+        }
+        if (isset($_REQUEST['GLOBALS']) || isset($_FILES['GLOBALS'])) {
+            trigger_error("GLOBALS overwrite attempt detected!!",E_USER_ERROR);
+        }
+        $except= array('GLOBALS','_GET','_POST','_COOKIE','_REQUEST','_SERVER','_ENV','_FILES');
+        $_SESSION=isset($_SESSION) && is_array($_SESSION) ? $_SESSION : array();
+        $input=array_merge($_GET,$_POST,$_COOKIE,$_SERVER,$_ENV,$_FILES,$_SESSION);
+        foreach ($input as $k=>$v) {
+            if (!in_array($k,$except) && isset($GLOBALS[$k])) {
+                unset($GLOBALS[$k]);
+            }
+        }
+    }
+
+    /**
      * 在utf-8的字符编码的字符串中截取部分
      */
     public function subUtf8($str, $len, $pad = null) {
@@ -219,6 +250,101 @@ class Utility {
         return '0.0.0.0';
     }
 
+    public function upload($field,$allow=array(),$maxSize=5242880){
+        $origin=array('gif','jpeg','jpg','png','bmp','txt','pdf');
+        $allow=array_unique(array_merge($origin,$allow));
+        if($_FILES[$field]){
+            if ($_FILES[$field]['error'] == 4){
+                return array('error'=>'2','message'=>'没有上传文件，请重新上传！！');
+            }
+            if ($_FILES[$field]['error'] > 0){
+                return array('error'=>'1','message'=>'上传失败，未知网络错误！！');
+            }
+            if($_FILES[$field]["size"] > $maxSize){
+                return array('error'=>'1','message'=>"上传失败，文件大小限制'{$maxSize}'！！");
+            }
+            $originfile=$_FILES[$field]["name"];
+            $ext = strtolower(substr(strrchr($originfile,"."),1));
+            if(!in_array($ext,$allow)){
+                return array('error'=>'1','message'=>'上传失败，未知文件格式！！');
+            }
+            $filename=date("ymd") . rand(10000, 99999) . '.' . $ext;
+            $dir=RTPATH.'uploads'.DS.date("Y").DS.date("m").DS;
+            $path='/uploads/'.date("Y/m/");
+            $url=$path.$filename;
+            $file=$dir.$filename;
+            file_exists($dir) || mkdir($dir,0777,true);
+            move_uploaded_file($_FILES[$field]["tmp_name"], $file);
+            return array('error'=>'0','url'=>$url,'file'=>$file,'filename'=>$filename,'dir'=>$dir,'path'=>$path);
+        }
+        return array('error'=>'1','message'=>'没有上传动作！！');
+    }
+
+    /**
+    * 生成缩略图，本函数支持透明通道，等比例缩放，对小图片不作处理
+    * @param width 目标最大宽度
+    * @param height 目标最大高度
+    * @param cut 是剪贴图像还是缩放
+    */
+    public function thumb($src, $dst, $width=1000, $height=800, $cut=false){
+        if(!file_exists($src)){
+            trigger_error('Invalid file path!!',E_USER_ERROR);
+        }
+        $ext = strtolower(substr(strrchr($src,"."),1));
+        $origin=array('gif','jpeg','jpg','png','bmp');
+        if(!in_array($ext,$origin)){
+            trigger_error('Unsupported image file!!',E_USER_ERROR);
+        }
+        list($w, $h) = getimagesize($src);
+        if($w < $width or $h < $height){
+            return copy($src, $dst);
+        }
+        switch($ext){
+            case 'bmp':
+                $img = imagecreatefromwbmp($src);
+                break;
+            case 'gif':
+                $img = imagecreatefromgif($src);
+                break;
+            case 'jpeg':
+            case 'jpg':
+                $img = imagecreatefromjpeg($src);
+                break;
+            case 'png':
+                $img = imagecreatefrompng($src);
+                break;
+        }
+        if($cut){//剪切图片（$w:$center,$h:$top）
+            $ratio = max($width/$w, $height/$h);
+            $h = $height / $ratio;
+            $x = ($w - $width / $ratio) / 2;
+            $w = $width / $ratio;
+        }else{//缩放图片
+            $ratio = min($width/$w, $height/$h);
+            $width = $w * $ratio;
+            $height = $h * $ratio;
+            $x = 0;
+        }
+        $canvas = imagecreatetruecolor($width, $height);
+        if($ext == "gif" or $ext == "png"){
+            imagecolortransparent($canvas, imagecolorallocatealpha($canvas, 0, 0, 0, 127));
+            imagealphablending($canvas, false);
+            imagesavealpha($canvas, true);
+        }
+        imagecopyresampled($canvas, $img, 0, 0, $x, 0, $width, $height, $w, $h);
+        switch($ext){
+            case 'bmp':
+                return imagewbmp($canvas, $dst);
+            case 'gif':
+                    return imagegif($canvas, $dst);
+            case 'jpg':
+                return imagejpeg($canvas, $dst);
+            case 'png':
+                return imagepng($canvas, $dst);
+        }
+        return false;
+    }
+
     /**
     * 将从数据库中返回的多行数据按字段求和，返回一维数组,
     */
@@ -246,14 +372,67 @@ class Utility {
     /**
     * 将数据转换成地址形式：key=val&key2=val2&...
     */
-    public function dataToUrl($data){
-        $addr='1=1&';
+    public function dataToUrl($data,$data2=array()){
+        $addr=null;
+        $data=array_unique(array_merge($data,$data2));
         foreach ($data as $key => $val) {
             if($val !== null && is_scalar($val)) {
                 $addr.="{$key}={$val}&";
             }
         }
-        return substr($addr, 0, strlen($addr) - 1);
+        if(strlen($addr)>0){
+            return substr($addr, 0, strlen($addr) - 1);
+        }
+        return '1=1';
+    }
+
+    /**
+    * form 表单文单行本输入框
+    */
+    public function formTextInput($name,$cat,$value=null,$attr=null){
+        return "<input type=\"{$cat}\" name=\"{$name}\" value=\"{$value}\" {$attr}/>\n";
+    }
+
+    /**
+    * form 表单下拉列表
+    */
+    public function formSelect($name,$data,$sid=0,$attr=null){
+        $formStr="<select name=\"{$name}\" {$attr}>\n";
+        foreach($data as $key=>$val){
+            $select=($key==$sid)?'selected':null;
+            $formStr.="<option {$select} value=\"{$key}\">{$val}</option>\n";
+        }
+        return $formStr."</select>\n";
+    }
+
+    /**
+    * form 表单单选按钮组
+    */
+    public function formRadio($name,$data,$sid=0,$attr=null){
+        $formStr=null;
+        foreach($data as $key=>$label){
+            $checked=($key==$sid)?'checked':null;
+            $formStr.="<label> <input name=\"{$name}\" type=\"radio\" {$checked} value=\"{$key}\" {$attr} /> {$label} </label>";
+        }
+        return $formStr;
+    }
+
+    /**
+    * form 表单复选框
+    */
+    public function formCheckBox($name,$data,$set=array(),$attr=null){
+        $formStr=null;
+        foreach($data as $key=>$label){
+            $checked=(in_array($key,$set))?'checked':null;
+            $formStr.="<label> <input name=\"{$name}\" type=\"checkbox\" {$checked} value=\"{$key}\" {$attr} /> {$label} </label>";
+        }
+        return $formStr;
+    }
+    /**
+    * form 表单多行文本输入区
+    */
+    public function formTextArea($name,$value=null,$attr=null){
+        return "<textarea  name=\"{$name}\" {$attr}>{$value}</textarea>";
     }
 
     /**

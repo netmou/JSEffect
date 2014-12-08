@@ -1,0 +1,57 @@
+html,body{
+    height:100%;
+    text-align:center;
+    background:#193F80;
+}
+body:after{
+    display:inline-block;
+    width:0px;
+    height:100%;
+    content:".";
+    vertical-align:middle;
+    visibility:hidden;
+}
+
+#login{
+    background:#001334;
+    border-radius:10px;
+    background-repeat: no-repeat;
+    width:350px;
+    height:200px;
+    vertical-align:middle;
+    display:inline-block;
+    margin:0px auto !important;
+    color:#fff;
+}
+#title{
+    margin-top:10px;
+    padding:5px 0px;
+    font-size:20px;
+    line-height:35px;
+    height:35px;
+    text-align:center;
+}
+#login table{
+    margin-left:20px;
+    margin-top:5px;
+}
+#login td{
+    border:none;
+    color:#ABB0CD;
+    height:30px;
+
+}
+table img{
+    vertical-align:middle;
+    cursor: pointer;
+}
+table input{
+    vertical-align:middle;
+}
+hr{
+    height:0px;
+    border:none;
+    border-top:1px solid #000628;
+    border-bottom:1px solid #162345;
+    margin:5px 15px;
+}

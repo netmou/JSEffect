@@ -2,9 +2,11 @@
 define('IN_MY_PHP', true);
 define('DS', DIRECTORY_SEPARATOR);
 define('RTPATH', dirname(dirname(__FILE__)) . DS);
+define('LIBPATH', dirname(__FILE__) . DS);
 header("Content-type: text/html; charset=utf-8");
 date_default_timezone_set('PRC');
-//error_reporting(E_ALL & ~E_NOTICE);
+//error_reporting(0);
+error_reporting(E_ALL ^ E_NOTICE);
 class Master implements ArrayAccess{
     private static $single=null;
     private $container = array();
@@ -17,26 +19,41 @@ class Master implements ArrayAccess{
         self::$single->load($classes);
         return self::$single;
     }
-    public function load($classes){
-        if($classes&&is_array($classes)){
+    public function load($classes,$init=true,$path=null){
+        if($classes && is_array($classes)){
             foreach($classes as $key=> $class){
-                $this->init($class,$key);
+                if(true==$init){
+                    $this->init($class,$key,$path);
+                }else{
+                    $this->contain($class,$path);
+                }
             }
         }
     }
-    public function init($class,$key=null){
+    public function init($class,$key=null,$path=null){
         if(!isset($this->container[$class])){
-            $file=$class.'.class.php';
-            include_once($file);
-            if(!$key || is_numeric($key)){
+            $this->contain($class,$path);
+            if($key==null || is_numeric($key)){
                 $key=$class;
             }
             $this->container[$key]=new $class();
         }
     }
+    public function contain($class,$path=null){
+        if($path!=null){
+            $file=LIBPATH.$path.DS.$class.'.class.php';
+        }else{
+            $file=LIBPATH.$class.'.class.php';
+        }
+        $file=LIBPATH.$class.'.class.php';
+        if(file_exists($file) && is_readable($file)){
+            return include_once($file);
+        }
+        trigger_error("Class:'{$class}' is not found!!",E_USER_ERROR);
+    }
     public function offsetSet($offset, $value) {
         if (is_null($offset)) {
-            throw new Exception("Offset must be a valid label", 0);
+            trigger_error("Offset:'{$offset}' must be a valid label", E_USER_ERROR);
         } else {
             $this->container[$offset] = $value;
         }
