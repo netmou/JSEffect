@@ -3,6 +3,7 @@ define('IN_MY_PHP', true);
 define('DS', DIRECTORY_SEPARATOR);
 define('RTPATH', dirname(dirname(__FILE__)) . DS);
 define('LIBPATH', dirname(__FILE__) . DS);
+define('WBPATH', substr($_SERVER['PHP_SELF'],0,strrpos($_SERVER['PHP_SELF'], '/')) . '/');
 header("Content-type: text/html; charset=utf-8");
 date_default_timezone_set('PRC');
 //error_reporting(0);

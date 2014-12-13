@@ -6,6 +6,8 @@ IN_MY_PHP||die(0);
  */
 class Utility {
 
+    const GPC=get_magic_quotes_gpc();
+
     /**
      * 返回地球上两个经纬坐标之间的的距离，算法基于椭圆，返回值单位：米（M）
      */
@@ -111,15 +113,17 @@ class Utility {
         return $val;
     }
 
-    /**
-     * 将一个url的quergString部分解析为键值对数组
-     */
-    public function parseQuery($url) {
-        $info = parse_url($url);
-        $tmp = array();
-        parse_str($info['query'], $tmp);
-        return $tmp;
+    public function filterData($input){
+        if(is_array($input)){
+            foreach($input as $key=>$val){
+                $input[$key]=$this->filterData($val);
+            }
+            return $input;
+        }else{
+            return $this->removeXSS($input);
+        }
     }
+
 
     /**
      * 临时重置页面
@@ -156,7 +160,7 @@ class Utility {
             if (is_numeric($val)) {
                 return $val;
             } else if (is_string($val)) {
-                if ($slash && !get_magic_quotes_gpc()) {
+                if ($slash && !GPC) {
                     $val = str_replace("\\", '\\\\', $val);
                     $val = str_replace("\"", '\"', $val);
                     $val = str_replace('\'', '\\\'', $val);
@@ -178,7 +182,7 @@ class Utility {
      * 针对外部输入，将变量中特殊字符转义
      */
     public function addSlash($str) {
-        if (get_magic_quotes_gpc()) {
+        if (GPC) {
             return $str;
         }
         return addslashes($str);
@@ -188,7 +192,7 @@ class Utility {
      * 针对外部输入，将变量中经过转义的特殊字符反转义
      */
     public function stripSlash($str) {
-        if (get_magic_quotes_gpc()) {
+        if (GPC) {
             return stripslashes($str);
         }
         return $str;
@@ -270,12 +274,20 @@ class Utility {
             }
             $filename=date("ymd") . rand(10000, 99999) . '.' . $ext;
             $dir=RTPATH.'uploads'.DS.date("Y").DS.date("m").DS;
-            $path='/uploads/'.date("Y/m/");
+            $path=WBPATH.'uploads/'.date("Y/m/");
             $url=$path.$filename;
             $file=$dir.$filename;
             file_exists($dir) || mkdir($dir,0777,true);
             move_uploaded_file($_FILES[$field]["tmp_name"], $file);
-            return array('error'=>'0','url'=>$url,'file'=>$file,'filename'=>$filename,'dir'=>$dir,'path'=>$path);
+            return array(
+                'error'=>'0',
+                'url'=>$url,
+                'file'=>$file,
+                'dir'=>$dir,
+                'path'=>$path,
+                'filename'=>$filename,
+                'originfile'=>$originfile,
+            );
         }
         return array('error'=>'1','message'=>'没有上传动作！！');
     }
@@ -359,6 +371,7 @@ class Utility {
 
     /**
     * 分组统计转换 eg. select count(xx) as num, xx from... group by xx;
+    * 返回数组 eg. array(xx1=>count(xx1),xx2=>count(xx2),...)
     */
     public function groupConvert ($data,$key,$val){
         $tmp=array();
@@ -373,17 +386,18 @@ class Utility {
     * 将数据转换成地址形式：key=val&key2=val2&...
     */
     public function dataToUrl($data,$data2=array()){
-        $addr=null;
-        $data=array_unique(array_merge($data,$data2));
-        foreach ($data as $key => $val) {
-            if($val !== null && is_scalar($val)) {
-                $addr.="{$key}={$val}&";
-            }
-        }
-        if(strlen($addr)>0){
-            return substr($addr, 0, strlen($addr) - 1);
-        }
-        return '1=1';
+        $tmp=array_unique(array_merge($data,$data2));
+        return http_build_query($tmp);
+    }
+
+    /**
+    * 将一个url的quergString部分解析为键值对数组
+    */
+    public function parseQuery($url) {
+        $info = parse_url($url);
+        $tmp = array();
+        parse_str($info['query'], $tmp);
+        return $tmp;
     }
 
     /**
