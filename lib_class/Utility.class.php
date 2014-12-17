@@ -141,8 +141,8 @@ class Utility {
     /**
      * 给出js-alert提示并跳转页面
      */
-    public function alert($msg, $addr=null) {
-        echo "<script>\n";
+    public function jsAlert($msg, $addr=null) {
+        echo "<script type=\"text/jascript\">\n";
         echo "alert('{$msg}');\n";
         if ($addr !=null) {
             echo "location.href='{$addr}';\n";
@@ -349,12 +349,24 @@ class Utility {
                 return imagewbmp($canvas, $dst);
             case 'gif':
                     return imagegif($canvas, $dst);
+            case 'jpeg':
             case 'jpg':
                 return imagejpeg($canvas, $dst);
             case 'png':
                 return imagepng($canvas, $dst);
         }
         return false;
+    }
+    
+    public function arrayFilter($array,$keys,$except=false){
+        $rst=array();
+        foreach($keys as $key){
+            $rst[$key]=$array[$key];
+        }
+        if($except){
+            return array_diff_key($array,$rst);
+        }
+        return $rst;
     }
 
     /**
@@ -448,6 +460,49 @@ class Utility {
     public function formTextArea($name,$value=null,$attr=null){
         return "<textarea  name=\"{$name}\" {$attr}>{$value}</textarea>";
     }
+    
+    /**
+    * 像一颗树一样，使表单列表元素有层次感
+    * array(array(id=>xx,pid=>xx,title=>xx),...)
+    */
+    public function selectTree ($data,$root,$sid,$parent=array(),$end=false){
+		$set=array();
+		$decorate=null;
+		$retStr=null;
+		$current=null;
+		foreach($data as $item){
+			if($item['id']==$root){
+				$current=$item;
+			}
+			if ($item['pid'] == $root){
+				$set[]=$item;
+			}
+		}
+		if(is_array($current)){
+			for($i=0;$i<count($parent)-1;$i++){
+				if($parent[$i]>0){
+					$decorate.='│&nbsp;';
+				}else{
+					$decorate.='&nbsp;&nbsp;';
+				}
+			}
+			if(count($parent)>0){
+		        $decorate.=$end?'└─':'├─';
+		    }
+			$selected = $current['id'] == $sid ? 'selected' : null;
+		    $retStr.="<option {$selected} value=\"{$current['id']}\">{$decorate}{$current['title']}</option>\n";
+		}
+		$size=count($set);
+		array_push($parent,$size);
+	    for($i=0;$i<$size;$i++){
+			$end=($i==$size-1)?true:false;
+			if(true==$end){
+				$parent[count($parent)-1]=0;
+			}
+	        $retStr.=$this->selectTree($data,$set[$i]['id'],$sid,$parent,$end);
+	    }
+	    return $retStr;
+	}
 
     /**
      * 加密字符串
