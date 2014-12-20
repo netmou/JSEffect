@@ -89,7 +89,7 @@ class MysqlDriver {
         return $this->execute($sql);
     }
 
-    public function rowCount($sql = null) {
+    public function resultCount($sql = null) {
         if ($sql) {
             $this->execute($sql);
         }
@@ -212,10 +212,10 @@ class MysqlDriver {
     public function insert($table, $data, $slash = false) {
         $values = $fields = array();
         foreach ($data as $key => $val) {
-            if ($val !== null && is_scalar($val)) {
-                $values[] = $slash ? '"' . addslashes($val) . '"' : '"' . $val . '"';
+            if (is_scalar($val) && $val !== '') {
+                $value = $slash ? '"' . addslashes($val) . '"' : '"' . $val . '"';
             } else {
-                $values[] = 'NULL';
+                $value = 'NULL';
             }
             $fields[] = '`' . $key . '`';
         }
@@ -238,7 +238,7 @@ class MysqlDriver {
         }
         $sql = 'UPDATE `' . trim($table) . '` SET ';
         foreach ($data as $key => $val) {
-            if ($val !== null && is_scalar($val)) {
+            if (is_scalar($val) && $val !== '') {
                 $val = $slash ? '"' . addslashes($val) . '"' : '"' . $val . '"';
             } else {
                 $val = 'NULL';
@@ -248,7 +248,7 @@ class MysqlDriver {
         $sql = substr($sql, 0, strlen($sql) - 1) . ' where 1=1 ';
         if (is_array($condition)) {
             foreach ($condition as $key => $val) {
-                if ($val !== null && is_scalar($val)) {
+                if (is_scalar($val) && $val !== '') {
                     $val = $slash ? '"' . addslashes($val) . '"' : '"' . $val . '"';
                 }
                 $sql = $sql . ' and `' . $key . '`=' . $val;
@@ -262,6 +262,7 @@ class MysqlDriver {
 
     /**
      * 根据条件模糊查询数据，返回指定的结果
+     * 不适用于字段比较多的表
      * @param string $table 数据表名
      * @param array $fields 返回的字段
      * @param array $likes 模糊匹配的字段
@@ -275,7 +276,7 @@ class MysqlDriver {
         $like = ' and concat_ws(\'-|-\',' . implode(',', $likes) . ') like ' . "'%{$keyword}%' ";
         if (is_array($condition)) {
             foreach ($condition as $key => $val) {
-                if ($val !== null && is_scalar($val)) {
+                if (is_scalar($val) && $val !== '') {
                     $val = $slash ? '"' . addslashes($val) . '"' : '"' . $val . '"';
                 }
                 $like = $like . ' and `' . $key . '`=' . $val;
@@ -307,7 +308,7 @@ class MysqlDriver {
         $sql = 'select ' . $selected . ' from `' . trim($table) . '` where 1=1 ';
         if (is_array($condition)) {
             foreach ($condition as $key => $val) {
-                if ($val !== null && is_scalar($val)) {
+                if (is_scalar($val) && $val !== '') {
                     $val = $slash ? '"' . addslashes($val) . '"' : '"' . $val . '"';
                 }
                 $sql = $sql . ' and `' . $key . '`=' . $val;
@@ -333,7 +334,7 @@ class MysqlDriver {
         $sql = 'delete from `' . $table . '` where 1=1';
         if (is_array($condition)) {
             foreach ($condition as $key => $val) {
-                if ($val !== null && is_scalar($val)) {
+                if (is_scalar($val) && $val !== '') {
                     $val = $slash ? '"' . addslashes($val) . '"' : '"' . $val . '"';
                 }
                 $sql = $sql . ' and `' . $key . '`=' . $val;

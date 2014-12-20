@@ -6,8 +6,6 @@ IN_MY_PHP||die(0);
  */
 class Utility {
 
-    const GPC=get_magic_quotes_gpc();
-
     /**
      * 返回地球上两个经纬坐标之间的的距离，算法基于椭圆，返回值单位：米（M）
      */
@@ -127,8 +125,8 @@ class Utility {
 
     /**
      * 临时重置页面
+     * 建议应用此函数时开启输出缓冲
      */
-
     public function redirect($url) {
         if (! headers_sent()) {
             header('HTTP/1.1 302 Temporarily Moved');
@@ -141,11 +139,14 @@ class Utility {
     /**
      * 给出js-alert提示并跳转页面
      */
-    public function jsAlert($msg, $addr=null) {
+    public function jsAlert($msg, $go=-1) {
         echo "<script type=\"text/jascript\">\n";
         echo "alert('{$msg}');\n";
-        if ($addr !=null) {
-            echo "location.href='{$addr}';\n";
+        if (is_string($go)) {
+            echo "window.location.href='{$go}';\n";
+        }else if(is_int($go)){
+            echo "window.history.go({$go});\n";
+            echo "window.location.reload()\n";
         }
         echo "</script>";
         exit(0);
@@ -160,7 +161,7 @@ class Utility {
             if (is_numeric($val)) {
                 return $val;
             } else if (is_string($val)) {
-                if ($slash && !GPC) {
+                if ($slash && !get_magic_quotes_gpc()) {
                     $val = str_replace("\\", '\\\\', $val);
                     $val = str_replace("\"", '\"', $val);
                     $val = str_replace('\'', '\\\'', $val);
@@ -182,7 +183,7 @@ class Utility {
      * 针对外部输入，将变量中特殊字符转义
      */
     public function addSlash($str) {
-        if (GPC) {
+        if (get_magic_quotes_gpc()) {
             return $str;
         }
         return addslashes($str);
@@ -192,7 +193,7 @@ class Utility {
      * 针对外部输入，将变量中经过转义的特殊字符反转义
      */
     public function stripSlash($str) {
-        if (GPC) {
+        if (get_magic_quotes_gpc()) {
             return stripslashes($str);
         }
         return $str;
@@ -358,15 +359,15 @@ class Utility {
         return false;
     }
     
-    public function arrayFilter($array,$keys,$except=false){
-        $rst=array();
+    public function subArray($array,$keys,$except=false){
+        $rtn=array();
         foreach($keys as $key){
-            $rst[$key]=$array[$key];
+            $rtn[$key]=$array[$key];
         }
         if($except){
-            return array_diff_key($array,$rst);
+            return array_diff_key($array,$rtn);
         }
-        return $rst;
+        return $rtn;
     }
 
     /**

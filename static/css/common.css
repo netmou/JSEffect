@@ -8,7 +8,7 @@ body{
     overflow:hidden;
 }
 *{
-    font-family:"Microsoft YaHei", "微软雅黑";
+    font-family:"Microsoft YaHei", "微软雅黑",Tahoma;
 }
 a{
     text-decoration: none;
@@ -22,6 +22,12 @@ a:hover{
 caption{
     text-align:center;
 }
+hr{
+    border:none;
+    background-color:#888;
+    height:1px;
+    line-height:1;
+}
 input{
     display:inline-block;
     box-sizing: border-box;
@@ -29,11 +35,7 @@ input{
     font-size:12px;
     height:1.85em;
 }
-input[type="text"]{
-    padding:2px 0px;
-    border:1px solid #aaa;
-}
-input[type="password"]{
+input[type="text"],input[type="password"]{
     padding:2px 0px;
     border:1px solid #aaa;
 }
@@ -87,7 +89,7 @@ textarea{
     box-sizing: border-box;
     vertical-align:middle;
 }
-ul{
+ul,ol{
     padding:0px;
     margin:0px auto;
     list-style: none;
@@ -103,8 +105,9 @@ ul{
     text-align: center;
     vertical-align:middle;
     text-decoration: none;
-    padding: 0.1em 0.55em;
+    padding: 0.1em 0.5em;
     font-size:12px;
+    letter-spacing:0.1em;
     line-height:1.65em;
     height:1.65em;
     background-image:linear-gradient(180deg, #f9f9f9,#dfdfdf);
@@ -112,7 +115,7 @@ ul{
     border:1px solid #bbb;
 }
 .btn:hover{
-    border:1px solid #6fc5ed;
+    outline:1px solid #c7effb;
 }
 .clr {
     zoom: 1;
@@ -190,6 +193,7 @@ ul{
 }
 .txt-star:after{
     display:inline-block;
+    padding:0px 3px;
     content:"*";
-    color:red;
+    color:#e00;
 }
