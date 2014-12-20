@@ -1,0 +1,39 @@
+.paper{
+    width:794px;
+    padding:30px 0px 40px;
+    background:#fefefe;
+
+    border:1px solid #ddd;
+}
+
+.paper h3{
+    text-align:center;
+    font-weight:normal;
+}
+.paper table{
+    /*width:644px;*/
+    font-size:12px;
+}
+.paper td{
+    border-bottom: #eee 1px solid;
+    line-height:30px;
+    padding:0px 5px;
+}
+.paper th{
+    line-height:30px;
+    background:#EEF3F7;
+    border-bottom: #d5dfe8 1px solid;
+    padding:0px 5px;
+}
+.paper .control{
+    width:644px;
+    height:30px;
+    line-height:30px;
+    text-align:center;
+    margin:30px auto 0px;
+}
+.stars img{
+    height:16px;
+    vertical-align:middle;
+}
+

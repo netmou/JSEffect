@@ -1,5 +1,13 @@
 <?php
-include "li_class/init.inc.php";
+include "lib_class/init.class.php";
+$m=Master::create(array('Guard'));
+$mysql=$m['MysqlDriver'];
+var_export("fdsjkalj");
+// function test(){
+//     global $mysql;
+//     $mysql->execute('select 1from 2');
+// }
+// test();
 ?>
 <!DOCTYPE html>
 <html lang="zh-cn">

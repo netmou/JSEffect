@@ -1,0 +1,64 @@
+.paper{
+    width:794px;
+    padding:5px 0px;
+    border:1px solid #8a8b8a;
+    font-size:12px;
+    background:#fff;
+}
+.paper td{
+    text-align:center;
+    vertical-align:middle;
+    border:1px solid #333;
+}
+.paper td.bold{
+    font-weight:700;
+}
+
+.paper td.con-lft{
+    text-align:left;
+}
+.paper div.con-format{
+    margin-left:30px;
+
+}
+.paper #print{
+    width:644px;
+    margin:0px auto;
+}
+#headinfo h1{
+    text-align:center;
+    margin:15px 0px;
+    font-weight:normal;
+}
+#attach{
+    width:644px;
+    padding:5px 0px;
+}
+#control{
+    line-height:50px;
+    height:50px;
+    text-align:center;
+}
+#control input{
+    /*line-height:30px;*/
+    height:30px;
+}
+#tab{
+    margin:5px 15px;
+    padding:0px 10px;
+    line-height:30px;
+    height:30px;
+    border-bottom:1px solid #ccc;
+    font-size:14px;
+}
+#tab li{
+    width:90px;
+    background:#ddd;
+    border:none;
+    text-align:center;
+    cursor:pointer;
+}
+#tab li.active{
+    background:#1D83DB;
+    color:#fff;
+}

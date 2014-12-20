@@ -1,5 +1,9 @@
 <?php
-
+IN_MY_PHP || die(0);
+/**
+ * 一个简单的分页类
+ * @author netmou <leiyanfo@sina.com>
+ */
 class Page {
 
     private $offset; //每页显示的条目数
@@ -12,65 +16,63 @@ class Page {
     private $pagelink; //每个分页的链接
 
     /**
-     * @$offset   每页显示的条目数
-     * +---------------------------------------------------------------
-     * @total     总条目数
-     * @current_num     当前被选中的页
-     * +---------------------------------------------------------------
-     * @showpage       每次显示的页数
-     * +---------------------------------------------------------------
-     * @pagelink    每个分页的链接
-     * +---------------------------------------------------------------
-     * example：   第1/453页 [首页] [上页] [1] [2] [3] [4] [下页] [尾页]
+     * @param offset   每页显示的条目数
+     * @param total     总条目数
+     * @param curpage   当前被选中的页
+     * @param pagelink    每个分页的链接
      */
-
-    function __construct($offset, $total, $curpage, $pagelink, $showpage = 6) {
+    public function __construct($offset, $total, $curpage, $pagelink) {
         $this->offset = intval($offset);
         $this->total = intval($total);
         $this->curpage = max(1, intval($curpage));
-        $this->showpage = intval($showpage);
         $this->pagetotal = ceil($total / $offset);
         $this->pagelink = $pagelink;
         $this->start = ($this->curpage - 1) * $this->offset;
     }
 
-    function getStart() {
+    /**
+     * @return int 分页开始的位置
+     */
+    public function getStart() {
         return $this->start;
     }
-
-    function showpage() {
+    /**
+     * @param showpage   每次显示的页数
+     */
+    public function showpage($list=6) {
+        $page_frag=null;
         $pages = ceil($this->total / $this->offset);
         $homepage = $this->pagelink . '1';
         $rearpage = $this->pagelink . $pages;
         $prevpage = $this->pagelink . ($this->curpage - 1);
-        echo "<span class='pagesinfo'>共<b>{$this->total}</b>条记录</span>";
-        echo "<span class='pagesinfo'><b>{$this->curpage}/{$pages}</b>页</span>";
-        echo "<span id='pages'>";
-        echo "<a href='{$homepage}'><span>首页</span></a>";
+        $page_frag.= "<span class='pages'>共<b>{$this->total}</b>条记录</span>";
+        $page_frag.= "<span class='pages'><b>{$this->curpage}/{$pages}</b>页</span>";
+        $page_frag.= "<span class='pages'>";
+        $page_frag.= "<a href='{$homepage}'><span class='first'>首页</span></a>";
         if ($this->curpage == 1) {
-            echo "<a class='disable' href='#'><span>上一页</span></a>";
+            $page_frag.= "<a class='disable' href='#'><span class='prev'>上一页</span></a>";
         } else {
-            echo "<a  href='{$prevpage}'><span>上一页</span></a>";
+            $page_frag.= "<a  href='{$prevpage}'><span class='prev'>上一页</span></a>";
         }
-        $from = max(floor($this->curpage - $this->showpage / 2), 1);
-        $to = min(ceil($this->curpage + $this->showpage / 2), $pages);
+        $from = max(floor($this->curpage - $list / 2), 1);
+        $to = min(ceil($this->curpage + $list / 2), $pages);
         for ($i = $from; $i < $this->curpage; $i++) {
             $pageaddr = $this->pagelink . $i;
-            echo "<a href='{$pageaddr}'><span>{$i}</span></a>";
+            $page_frag.= "<a href='{$pageaddr}'><span class='digit'>{$i}</span></a>";
         }
-        echo "<a class='disable' href='#'><span>{$this->curpage}</span></a>";
+        $page_frag.= "<a class='disable' href='#'><span class='digit cur'>{$this->curpage}</span></a>";
         for ($i = $this->curpage + 1; $i <= $to; $i++) {
             $pageaddr = $this->pagelink . $i;
-            echo "<a href='{$pageaddr}'><span>{$i}</span></a>";
+            $page_frag.= "<a href='{$pageaddr}'><span class='digit'>{$i}</span></a>";
         }
         $nextpage = $this->pagelink . ($this->curpage + 1);
         if ($this->curpage == $pages) {
-            echo "<a class='disable' href='#'><span>下一页</span></a>";
+            $page_frag.= "<a class='disable' href='#'><span class='next'>下一页</span></a>";
         } else {
-            echo "<a  href='{$nextpage}'><span>下一页</span></a>";
+            $page_frag.= "<a  href='{$nextpage}'><span class='next'>下一页</span></a>";
         }
-        echo "<a href='{$rearpage}'><span>尾页</span></a>";
-        echo '</span>';
+        $page_frag.= "<a href='{$rearpage}'><span class='last'>尾页</span></a>";
+        return $page_frag.= '</span>';
     }
 }
 

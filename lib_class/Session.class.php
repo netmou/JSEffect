@@ -1,6 +1,11 @@
 <?php
+IN_MY_PHP||die(0);
+/**
+* Session管理类，修补了Sessoin固定攻击
+* @author netmou <leiyanfo@sina.com>
+*/
 class Session {
-	const SESSION_NAME = "mySession";
+	const SESSION_NAME = "PHPSESSID";
 	const SESSION_EXPIRE = 30;
 	public $status = false;
 	public $cache = false;
@@ -9,6 +14,9 @@ class Session {
 			if ($this -> cache) {
 				session_cache_limiter('private');
 				session_cache_expire(self::SESSION_EXPIRE);
+			}
+			if(headers_sent()){
+				trigger_error("Header content has been sent!",E_USER_ERROR);
 			}
 			session_name(self::SESSION_NAME);
 			session_start();
@@ -23,16 +31,15 @@ class Session {
 		}
 	}
 
-	public function check($key, $url, $val = null) {
-		$this -> start();
-		if ($val && $this -> get($key) == $val) {
-			return null;
-		} else if ($this -> has($key)) {
-			return null;
+	public function check($key, $url, $commit = false) {
+		if(false==$this -> has($key)) {
+			$this -> commit();
+			header("location: {$url}");
+			exit(0);
 		}
-		$this -> commit();
-		header("location: {$url}");
-		exit(0);
+		if($commit){
+			$this -> commit();
+		}
 	}
 
 	public function has($key) {
@@ -78,7 +85,7 @@ class Session {
 		$_SESSION = array();
 		if (ini_get("session.use_cookies")) {
 			$params = session_get_cookie_params();
-			setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+			setcookie(session_name(), '', time() - 86400, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
 		}
 		session_destroy();
 		$this -> status = false;
