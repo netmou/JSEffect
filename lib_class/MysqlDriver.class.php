@@ -5,7 +5,7 @@
  * 在服务器上部署时不要忘记关闭调试模式
  * @author netmou <leiyanfo@sina.com>
  */
-class mysql { 
+class mysql {
 
     private $Host = 'localhost';
     private $dbName = 'ocean';
@@ -37,7 +37,7 @@ class mysql {
             exit(mysql_error($this->linkID));
         }
         mysql_query("SET NAMES '" . $this->dbCharSet . "'", $this->linkID);
-        mysql_query("SET sql_mode='NO_ZERO_IN_DATE'", $this->linkID);
+        mysql_query("set sql_mode='STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,NO_ZERO_IN_DATE'", $this->linkID);
     }
 
     /**
@@ -186,7 +186,7 @@ class mysql {
     public function insert($table, $data, $slash = false) {
         $values = $fields = array();
         foreach ($data as $key => $val) {
-            if ($val !== null && is_scalar($val)) {
+            if (is_scalar($val) && $val !== '') {
                 $value = $slash ? '"' . addslashes($val) . '"' : '"' . $val . '"';
             } else {
                 $value = 'NULL';
@@ -213,7 +213,7 @@ class mysql {
         }
         $sql = 'UPDATE `' . trim($table) . '` SET ';
         foreach ($data as $key => $val) {
-            if ($val !== null && is_scalar($val)) {
+            if (is_scalar($val) && $val !== '') {
                 $val = $slash ? '"' . addslashes($val) . '"' : '"' . $val . '"';
             } else {
                 $val = 'NULL';
@@ -223,7 +223,7 @@ class mysql {
         $sql = substr($sql, 0, strlen($sql) - 1) . ' where 1=1 ';
         if (is_array($condition)) {
             foreach ($condition as $key => $val) {
-                if ($val !== null && is_scalar($val)) {
+                if (is_scalar($val) && $val !== '') {
                     $val = $slash ? '"' . addslashes($val) . '"' : '"' . $val . '"';
                 }
                 $sql = $sql . ' and `' . $key . '`=' . $val;
@@ -250,7 +250,7 @@ class mysql {
         $like = ' and concat_ws(\'-|-\',' . implode(',', $likes) . ') like ' . "'%{$keyword}%' ";
         if (is_array($condition)) {
             foreach ($condition as $key => $val) {
-                if ($val !== null && is_scalar($val)) {
+                if (is_scalar($val) && $val !== '') {
                     $val = $slash ? '"' . addslashes($val) . '"' : '"' . $val . '"';
                 }
                 $like = $like . ' and `' . $key . '`=' . $val;
@@ -282,7 +282,7 @@ class mysql {
         $sql = 'select ' . $selected . ' from `' . trim($table) . '` where 1=1 ';
         if (is_array($condition)) {
             foreach ($condition as $key => $val) {
-                if ($val !== null && is_scalar($val)) {
+                if (is_scalar($val) && $val !== '') {
                     $val = $slash ? '"' . addslashes($val) . '"' : '"' . $val . '"';
                 }
                 $sql = $sql . ' and `' . $key . '`=' . $val;
@@ -308,7 +308,7 @@ class mysql {
         $sql = 'delete from `' . $table . '` where 1=1';
         if (is_array($condition)) {
             foreach ($condition as $key => $val) {
-                if ($val !== null && is_scalar($val)) {
+                if (is_scalar($val) && $val !== '') {
                     $val = $slash ? '"' . addslashes($val) . '"' : '"' . $val . '"';
                 }
                 $sql = $sql . ' and `' . $key . '`=' . $val;
