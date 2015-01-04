@@ -139,14 +139,16 @@ class Utility {
     /**
      * 给出js-alert提示并跳转页面
      */
-    public function jsAlert($msg, $go=-1) {
-        echo "<script type=\"text/jascript\">\n";
+    public function jsAlert($msg, $go=null) {
+        echo "<script type=\"text/javascript\">\n";
         echo "alert('{$msg}');\n";
-        if (is_string($go)) {
-            echo "window.location.href='{$go}';\n";
-        }else if(is_int($go)){
+        if (null==$go) {
+            echo "window.location=document.referrer;\n";
+        }else if (is_string($go)) {
+            echo "window.location='{$go}';\n";
+        }else{
+            $go=(int)$go;
             echo "window.history.go({$go});\n";
-            echo "window.location.reload()\n";
         }
         echo "</script>";
         exit(0);
@@ -222,15 +224,15 @@ class Utility {
     /**
      * 在utf-8的字符编码的字符串中截取部分
      */
-    public function subUtf8($str, $len, $pad = null) {
+    public function subUtf8($str, $len) {
         $offset = 0;
         $chars = 0;
         $rst = null;
         $flag = array(0x3F, 0x1F, 0xF, 0x7, 0x3, 0x0);
         while ($chars < $len && $offset < strlen($str)) {
-            $high = ord(substr($str, $offset, 1));
+            $byte = ord(substr($str, $offset, 1));
             for ($i = 2; $i < 8; $i++) {
-                if ($high >> $i == $flag[$i]) {
+                if ($byte >> $i == $flag[$i-2]) {
                     $rst.= substr($str, $offset, 8 - $i);
                     $offset = $offset + 8 - $i;
                     ++$chars;
@@ -238,13 +240,32 @@ class Utility {
                 }
             }
         }
-        return $rst . $pad;
+        return $rst;
+    }
+    /**
+     * utf-8编码的字符串长度
+     */
+    public function Utf8Len($str) {
+        $offset = 0;
+        $chars = 0;
+        $flag = array(0x3F, 0x1F, 0xF, 0x7, 0x3, 0x0);
+        while ($offset < strlen($str)) {
+            $byte = ord(substr($str, $offset, 1));
+            for ($i = 2; $i < 8; $i++) {
+                if ($byte >> $i == $flag[$i-2]) {
+                    $offset = $offset + 8 - $i;
+                    ++$chars;
+                    break;
+                }
+            }
+        }
+        return $chars;
     }
 
     /**
      * 获取IP地址
      */
-    public function getRealIPAddress() {
+    public function getIPAddress() {
         if ($IP = $_SERVER['HTTP_CLIENT_IP']) {
             return $IP;
         } else if ($IP = $_SERVER['HTTP_X_FORWARDED_FOR']) {
@@ -278,7 +299,11 @@ class Utility {
             $path=WBPATH.'uploads/'.date("Y/m/");
             $url=$path.$filename;
             $file=$dir.$filename;
-            file_exists($dir) || mkdir($dir,0777,true);
+            if(!file_exists($dir)){
+				if(!mkdir($dir,0644,true)){
+					return array('error'=>'1','message'=>'没有权限写入硬盘！！');
+				}
+			}
             move_uploaded_file($_FILES[$field]["tmp_name"], $file);
             return array(
                 'error'=>'0',
@@ -463,7 +488,7 @@ class Utility {
     }
     
     /**
-    * 像一颗树一样，使表单列表元素有层次感
+    * 像一颗树一样，使表单的列表元素有层次感
     * array(array(id=>xx,pid=>xx,title=>xx),...)
     */
     public function selectTree ($data,$root,$sid,$parent=array(),$end=false){
@@ -522,6 +547,5 @@ class Utility {
         $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
         return mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, $decoded, MCRYPT_MODE_ECB, $iv);
     }
-
 }
 ?>

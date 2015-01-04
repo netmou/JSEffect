@@ -64,8 +64,11 @@ class MysqlDriver {
      * 检查到服务器的连接是否正常。如果断开，则自动尝试连接
      */
     function reconnect() {
-        if (mysql_ping($this->linkID) === false) {
-            $this->linkID = null;
+        if (is_resource($this->linkID) && mysql_ping($this->linkID) === false) {
+            return $this->connect($this->Host, $this->dbName, $this->UserName, $this->Password);
+        }
+        if($this->debug){
+            trigger_error('the linkID is not a resource!!');
         }
     }
 
@@ -76,6 +79,7 @@ class MysqlDriver {
      */
     public function execute($sql) {
         $this->lastSql = $sql;
+        $this->reconnect();
         $this->queryID = mysql_query($sql);
         if (false === $this->queryID && $this->debug) {
             trigger_error(mysql_error($this->linkID), E_USER_ERROR);
@@ -120,11 +124,14 @@ class MysqlDriver {
      * @param string $sql
      * @return integer
      */
-    public function fetchRow($sql = null) {
+    public function fetchRow($sql = null,$row = 0) {
         if ($sql) {
             $this->execute($sql);
         }
         if (is_resource($this->queryID)) {
+            if($row>0 && $row < mysql_num_rows($this->queryID)){
+                mysql_data_seek($this->queryID,$row);
+            }
             return mysql_fetch_array($this->queryID, MYSQL_ASSOC);
         }
         return null;

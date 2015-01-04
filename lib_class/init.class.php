@@ -71,6 +71,5 @@ class Master implements ArrayAccess{
         $this->init($offset);
         return $this->container[$offset];
     }
-
 }
 ?>

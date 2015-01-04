@@ -24,5 +24,4 @@ class PDODriver extends PDO {
 	}
 
 }
-class PDOStatement ex
 
