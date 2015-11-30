@@ -1,0 +1,255 @@
+/* CSS Document */
+@charset "utf-8";
+*{
+    /* 宋体 [SimSun] '\5B8B\4F53'
+    * 黑体 [SimHei] '\9ED1\4F53'
+    * 微软雅黑 [Microsoft YaHei] '\5FAE\8F6F\96C5\9ED1'
+    * 华文细黑 [STXihei] '\534E\6587\7EC6\9ED1'
+    * 仿宋 [FangSong] '\4EFF\5B8B'
+    * 楷体 [KaiTi] '\6977\4F53'
+    */
+    /*font-family:tahoma, arial, "Microsoft YaHei", "\5FAE\8F6F\96C5\9ED1", STXihei, "\534e\6587\7ec6\9ed1";*/
+    font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", "\5FAE\8F6F\96C5\9ED1", FreeSans
+}
+html{
+    height:100%;
+}
+body{
+    margin:0px;
+}
+a{
+    text-decoration: none;
+    outline:none;
+    color:#333;
+}
+a:hover{
+    text-decoration:underline;
+    color:#BF0000;
+}
+caption{
+    text-align:center;
+}
+input{
+    display:inline-block;
+    box-sizing: border-box;
+    vertical-align:middle;
+}
+input[type="text"],
+input[type="password"]{
+    padding:2px 3px;
+    /*border:1px solid #aaa;*/
+}
+input[type="button"],
+input[type="reset"],
+input[type="image"],
+input[type="submit"]{
+    outline:none;
+    cursor:pointer;
+}
+dl,dt,dd{
+    margin:0px auto;
+}
+frame,iframe{
+    display:block;
+    border:none;
+}
+img{
+    display:inline-block;
+    border:none;
+}
+label{
+    vertical-align:middle;
+}
+small {
+    font-size: 12px;
+}
+
+select{
+    display:inline-block;
+    box-sizing: border-box;
+    vertical-align:middle;
+}
+sup {
+    font-size: 0.6em;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+    top: -0.25em;
+}
+sub {
+    font-size: 0.6em;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+    bottom: -0.25em;
+}
+table{
+    border-collapse:collapse;
+    border-spacing:0;
+}
+textarea{
+    overflow: auto;
+    display:inline-block;
+    box-sizing: border-box;
+    vertical-align:middle;
+}
+ul{
+    padding:0px;
+    margin:0px auto;
+    list-style: none;
+}
+.abs {
+    position:absolute;
+}
+.btn {
+    outline: none;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    text-align: center;
+    vertical-align:middle;
+    text-decoration: none;
+    padding: 0.1em 0.55em;
+    font-size:12px;
+    height:1.65em;
+    line-height:1.65em;
+    border-radius: 0.2em;
+    border:1px solid #bbb;
+    background-image:linear-gradient(180deg, #f9f9f9,#dfdfdf);
+
+}
+.btn:hover{
+    border:1px solid #6fc5ed;
+}
+.btn.active{
+    border:1px solid #6fc5ed;
+}
+.btn.disabled{
+    background:#F4F4F4;
+    cursor:text !important;
+}
+.clr {
+    zoom: 1;
+}
+.clr:after {
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0px;
+    visibility: hidden;
+}
+.cnt{
+    display:block;
+    margin:0px auto;
+}
+.colgroup {
+    display:table-row;
+}
+.colgroup col{
+    padding:0px;
+    height:0px;
+    background:none;
+    border:none;
+    line-height:0;
+    display:table-cell;
+}
+.even{
+    background:#f5f5f5;
+}
+.fix{
+    position:fixed;
+}
+.hide{
+    display:none;
+}
+.hover{
+    background:#F2F2A2 !important;
+}
+.inb{
+    display:inline-block;
+}
+.hide2{
+    position:absolute;
+    z-index:-99999;
+    opacity:0;
+    filter:alpha(opacity=0);
+}
+.lft{
+    display:inline;
+    float:left;
+}
+.rlt{
+    position: relative;
+}
+.nbd{
+    border:none;
+}
+.rgt{
+    display:inline;
+    float:right;
+}
+.rnk{
+    zoom: 1;
+}
+.rnk:after {
+    content: ".";
+    display: block;
+    height: 0;
+    line-height:0;
+    clear: both;
+    visibility: hidden;
+}
+/**just for ie6*/
+.rnk li{
+    *float:left;
+    *padding:0px 2px;
+}
+.rnk > li{
+    display:inline-block;
+    padding:0px 2px;
+}
+.mid{
+    display:inline-block;
+    vertical-align:middle;
+}
+.odd{
+    background-color:#fff;
+}
+.show{
+    display:block;
+}
+.txt-rgt{
+    text-align:right !important;
+}
+.txt-lft{
+    text-align:left !important;
+}
+.txt-cnt{
+    text-align:center !important;
+}
+.txt-star:after{
+    display:inline-block;
+    content:"*";
+    color:red;
+}
+.uline{
+    border:none;
+    border-bottom:1px solid #333;
+    padding:2px 8px;
+}
+/** some style for element with attr contenteditable="true" */
+@media screen{
+    .writeable{
+    	display:inline-block;
+    	padding:0 5px;
+    	outline:1px solid #4F61FF;
+    }
+    .writeable:focus{
+    	outline:1px solid #4F61FF;
+        border:none;
+    	/*box-shadow: 0 0 5px 2px #527BF5, 0 0 1px #5682F5 inset;*/
+    }
+}
+
+
+

@@ -28,27 +28,27 @@ IN_MY_PHP||die(0);
 class MysqlDriver {
 
     private $Host = 'localhost';
-    private $dbName = 'lsgq';
+    private $dbName = 'lwgadf';
     private $UserName = 'root';
-    private $Password = '123456';
+    private $pwd = '123456';
     private $dbCharSet = 'utf8';
-    private $debug = true;
+    private $debug = false;
     private $linkID = null;
     private $queryID = null;
     public $lastSql;
 
     public function __construct($connect = true) {
         if ($connect) {
-            $this->connect($this->Host, $this->dbName, $this->UserName, $this->Password);
+            $this->connect($this->Host, $this->dbName, $this->UserName, $this->pwd);
         }
     }
 
     /**
      * 连接数据库方法
      */
-    public function connect($host, $dbName, $user, $pass) {
+    public function connect($host, $dbName, $user, $pwd) {
         if (!$this->linkID) {
-            $this->linkID = mysql_connect($host, $user, $pass, true);
+            $this->linkID = mysql_connect($host, $user, $pwd, true);
             if (!$this->linkID && $this->debug) {
                 trigger_error(mysql_error(),E_USER_ERROR);
             }
@@ -64,11 +64,8 @@ class MysqlDriver {
      * 检查到服务器的连接是否正常。如果断开，则自动尝试连接
      */
     function reconnect() {
-        if (is_resource($this->linkID) && mysql_ping($this->linkID) === false) {
-            return $this->connect($this->Host, $this->dbName, $this->UserName, $this->Password);
-        }
-        if($this->debug){
-            trigger_error('the linkID is not a resource!!');
+        if (mysql_ping($this->linkID) === false) {
+            $this->linkID = null;
         }
     }
 
@@ -79,7 +76,6 @@ class MysqlDriver {
      */
     public function execute($sql) {
         $this->lastSql = $sql;
-        $this->reconnect();
         $this->queryID = mysql_query($sql);
         if (false === $this->queryID && $this->debug) {
             trigger_error(mysql_error($this->linkID), E_USER_ERROR);
@@ -122,25 +118,22 @@ class MysqlDriver {
     /**
      * 取得单条记录
      * @param string $sql
-     * @return integer
+     * @return array
      */
-    public function fetchRow($sql = null,$row = 0) {
+    public function fetchRow($sql = null) {
         if ($sql) {
             $this->execute($sql);
         }
         if (is_resource($this->queryID)) {
-            if($row>0 && $row < mysql_num_rows($this->queryID)){
-                mysql_data_seek($this->queryID,$row);
-            }
             return mysql_fetch_array($this->queryID, MYSQL_ASSOC);
         }
-        return null;
+        return array();
     }
 
     /**
      * 将结果集以键值对的形式储存到数组中
      * @param string $sql
-     * @return array
+     * @return array[]
      */
     public function fetchData($sql = null) {
         if ($sql) {
@@ -154,6 +147,7 @@ class MysqlDriver {
         }
         return $tmp;
     }
+    
 
     /**
      * 返回上次插入数据表记录的ID
@@ -217,13 +211,17 @@ class MysqlDriver {
      * @return boolean
      */
     public function insert($table, $data, $slash = false) {
-        $values = $fields = array();
+        $values = array();
+		$fields = array();
         foreach ($data as $key => $val) {
-            if (is_scalar($val) && $val !== '') {
-                $value = $slash ? '"' . addslashes($val) . '"' : '"' . $val . '"';
-            } else {
-                $value = 'NULL';
-            }
+			if (is_scalar($val) && $val !== '') {
+                $values[] = $slash ? '"' . addslashes($val) . '"' : '"' . $val . '"';
+            } else if($val === '' || $val === null) {
+                $values[] = 'NULL';
+            }else{
+				trigger_error("数据集不合法，无法拼合成sql！",E_USER_ERROR);
+				continue; // 屏蔽错误异常时将该跳过该字段
+			}
             $fields[] = '`' . $key . '`';
         }
         $table = '`' . trim($table) . '`';
@@ -245,7 +243,7 @@ class MysqlDriver {
         }
         $sql = 'UPDATE `' . trim($table) . '` SET ';
         foreach ($data as $key => $val) {
-            if (is_scalar($val) && $val !== '') {
+			if (is_scalar($val) && $val !== '') {
                 $val = $slash ? '"' . addslashes($val) . '"' : '"' . $val . '"';
             } else {
                 $val = 'NULL';
@@ -343,8 +341,8 @@ class MysqlDriver {
             foreach ($condition as $key => $val) {
                 if (is_scalar($val) && $val !== '') {
                     $val = $slash ? '"' . addslashes($val) . '"' : '"' . $val . '"';
+                    $sql = $sql . ' and `' . $key . '`=' . $val;
                 }
-                $sql = $sql . ' and `' . $key . '`=' . $val;
             }
         } else if ($condition) {
             $condition = $slash ? addslashes($condition) : $condition;
@@ -357,7 +355,7 @@ class MysqlDriver {
      * 返回上次插入或更新或删除影响的条数
      * @return integer
      */
-    public function getAffectedRows() {
+    public function affectedRows() {
         return mysql_affected_rows($this->linkID);
     }
 
@@ -368,4 +366,3 @@ class MysqlDriver {
     }
 
 }
-?>

@@ -34,7 +34,7 @@ class Page {
      * @return int 分页开始的位置
      */
     public function getStart() {
-        return $this->start;
+        return (int)$this->start;
     }
     /**
      * @param showpage   每次显示的页数
@@ -72,8 +72,19 @@ class Page {
             $page_frag.= "<a  href='{$nextpage}'><span class='next'>下一页</span></a>";
         }
         $page_frag.= "<a href='{$rearpage}'><span class='last'>尾页</span></a>";
-        return $page_frag.= '</span>';
+        $page_frag.= '</span>';
+        if($pages>$list){
+            $page_frag.='跳转到 <select class="mid" onchange="window.location=\''.$this->pagelink.'\'+this.value">';
+            for($i=1;$i<=$pages;$i++){
+                if($this->curpage==$i){
+                    $page_frag.="<option selected value='{$i}'>$i</option>";
+                }else{
+                    $page_frag.="<option value='{$i}'>$i</option>";
+                }
+                
+            }
+            return $page_frag.='</select>';
+        }
+        return $page_frag;
     }
 }
-
-?>

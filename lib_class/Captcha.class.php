@@ -1,9 +1,14 @@
 <?php
-
+defined('IN_MY_PHP')||die(0);
+/**
+ * 一个字体大小不可随意可控的验证码生成类
+ * @author netmou <leiyanfo@sina.com>
+ */
 class Captcha {
-    var $width = 70; // 文件上传路径 结尾加斜杠
-    var $height = 25; // 缩略图路径（必须在$images_dir下建立） 结尾加斜杠
-
+    public $width = 70; // 文件上传路径 结尾加斜杠
+    public $height = 25; // 缩略图路径（必须在$images_dir下建立） 结尾加斜杠
+    public $captcode=null;
+    
     /**
     * +----------------------------------------------------------
     * 构造函数
@@ -25,9 +30,7 @@ class Captcha {
         for($i = 0; $i < 4; $i++) {
             $word .= $chars[mt_rand(0, strlen($chars) - 1)];
         }
-
-        // 把验证码字符串写入session
-        $_SESSION['captcha'] = md5($word);
+        $this->captcode=$word;
 
         // 绘制基本框架
         $im = imagecreatetruecolor($this->width, $this->height);
@@ -57,7 +60,6 @@ class Captcha {
         /* 绘图结束 */
         imagepng($im);
         imagedestroy($im);
-
         return true;
     }
 

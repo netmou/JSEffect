@@ -1,5 +1,5 @@
 <?php
-!defined('IN_MY_PHP') && die(0);
+IN_MY_PHP || die(0);
 /**
  * 一个阴历及生肖等中国传统日期的类
  * @author netmou <leiyanfo@sina.com>
@@ -83,9 +83,9 @@ class Lunar {
             $dd++;
         $lunar_ary = array();
         for ($i = 1; $i < $dd; $i++) {
-            $array = $this->getLunarByBetween($year, $this->getDaysBetweenSolar($year, $month, $i, $yearData[1], $yearData[2]));
-            $array[] = $year . '-' . $month . '-' . $i;
-            $lunar_ary[$i] = $array;
+            $dataay = $this->getLunarByBetween($year, $this->getDaysBetweenSolar($year, $month, $i, $yearData[1], $yearData[2]));
+            $dataay[] = $year . '-' . $month . '-' . $i;
+            $lunar_ary[$i] = $dataay;
         }
         return $lunar_ary;
     }
@@ -321,9 +321,9 @@ class Lunar {
 
     //转换成中文年份
     function toYear($year) {
-        $arr = array("零", "一", "二", "三", "四", "五", "六", "七", "八", "九");
+        $data = array("零", "一", "二", "三", "四", "五", "六", "七", "八", "九");
         $year_arr = str_split($year);
-        $str = $arr[$year_arr[0]] . $arr[$year_arr[1]] . $arr[$year_arr[2]] . $arr[$year_arr[3]];
+        $str = $data[$year_arr[0]] . $data[$year_arr[1]] . $data[$year_arr[2]] . $data[$year_arr[3]];
         return $str;
     }
 
@@ -357,4 +357,3 @@ class Lunar {
 
 }
 
-?>
